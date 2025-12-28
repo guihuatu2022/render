@@ -1,664 +1,480 @@
-﻿<!DOCTYPE html>
-<html lang="zh-CN">
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>蓉宝的国学书院 - 尊享管理版</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Green Earth - Personal Blog</title>
     <style>
         :root {
-            --bg-gradient: #fcf9f2; 
-            --sidebar-bg: #2c3e50; 
-            --content-bg: #fffbf0; 
-            --primary: #b83b3b; 
-            --accent: #f1c40f;
-            --text-dark: #2b2b2b;
-            --text-light: #ecf0f1;
-            --line-color: rgba(184, 59, 59, 0.08);
-            --radius: 8px;
+            --primary-green: #2d5016;
+            --light-green: #5a8f3a;
+            --accent-green: #8fbc5c;
+            --earth-brown: #8b7355;
+            --sky-blue: #87ceeb;
+            --cream: #f5f5dc;
+            --text-dark: #2c3e50;
         }
 
-        * { box-sizing: border-box; }
-        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: "Comic Sans MS", "Chalkboard SE", "Kaiti", "STKaiti", "楷体", serif;
-            background-color: #f0ebe0;
-            background-image: linear-gradient(to right, rgba(0,0,0,0.02) 1px, transparent 1px),
-                              linear-gradient(to bottom, rgba(0,0,0,0.02) 1px, transparent 1px);
-            background-size: 20px 20px;
-            margin: 0; padding: 0;
-            height: 100vh;
-            display: flex; justify-content: center; align-items: center;
-            color: var(--text-dark); overflow: hidden;
+            font-family: 'Georgia', serif;
+            background: linear-gradient(to bottom, var(--sky-blue) 0%, var(--cream) 100%);
+            color: var(--text-dark);
+            line-height: 1.6;
         }
 
-        .app-container {
-            width: 1200px; height: 92vh; background: var(--content-bg);
-            border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-            border: 1px solid #cbbba0; display: flex; overflow: hidden; position: relative;
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--primary-green), var(--light-green));
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
 
-        /* 侧边栏 */
-        .sidebar {
-            width: 260px; background: var(--sidebar-bg); padding: 30px 15px;
-            display: flex; flex-direction: column; color: var(--text-light); z-index: 2;
-        }
-        .profile-card { text-align: center; margin-bottom: 20px; flex-shrink: 0; }
-        .avatar {
-            width: 90px; height: 90px; background: #fff; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 50px; margin: 0 auto 15px; border: 4px solid var(--primary);
-        }
-        .stats-row {
-            display: flex; justify-content: space-around; margin-top: 15px;
-            background: rgba(255,255,255,0.1); padding: 10px; border-radius: 6px; font-size: 13px; color: #bdc3c7;
-        }
-        .nav-menu { list-style: none; padding: 0; flex: 1; overflow-y: auto; margin-right: -5px; padding-right: 5px; }
-        .nav-menu::-webkit-scrollbar { width: 4px; }
-        .nav-menu::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 4px; }
-        .nav-item {
-            display: flex; align-items: center; gap: 15px; padding: 12px 15px; margin-bottom: 8px;
-            border-radius: 6px; cursor: pointer; transition: all 0.3s ease; color: rgba(255,255,255,0.7);
-            font-size: 1.1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-        }
-        .nav-item:hover { background: rgba(255,255,255,0.1); color: white; transform: translateX(5px); }
-        .nav-item.active { background: var(--primary); color: white; font-weight: bold; transform: translateX(3px); }
-
-        /* 学期进度 */
-        .semester-box { margin-top: 20px; background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px; }
-        .semester-label { font-size: 12px; color: #bdc3c7; margin-bottom: 5px; display: flex; justify-content: space-between;}
-        .semester-bar-bg { height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden; }
-        .semester-bar-fill { height: 100%; background: linear-gradient(90deg, #f1c40f, #e67e22); width: 0%; border-radius: 4px; }
-
-        /* 主内容区 */
-        .main-content {
-            flex: 1; background: var(--content-bg); padding: 0; 
-            overflow-y: hidden; display: flex; flex-direction: column; position: relative;
-        }
-        .top-quote-banner {
-            background: linear-gradient(to right, #f7f2e6, #fffbf0);
-            padding: 20px 40px; border-bottom: 1px solid #e0dace;
-            text-align: center; position: relative; flex-shrink: 0; min-height: 90px;
-            display: flex; flex-direction: column; justify-content: center;
-        }
-        .quote-text {
-            font-size: 1.6rem; color: var(--primary); font-weight: bold; font-family: "Kaiti", serif;
-            margin-bottom: 5px; text-shadow: 1px 1px 0 rgba(0,0,0,0.05); animation: fadeIn 1.5s ease-in-out;
-        }
-        .quote-author { font-size: 0.9rem; color: #7f8c8d; font-family: "Kaiti", serif; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
-
-        .scroll-area { flex: 1; overflow-y: auto; padding: 30px 40px; }
-        .scroll-area::-webkit-scrollbar { width: 8px; }
-        .scroll-area::-webkit-scrollbar-thumb { background: #dcd6c8; border-radius: 4px; }
-
-        /* 通用组件 */
-        .page-header {
-            display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 25px; padding-bottom: 15px; border-bottom: 2px solid var(--primary);
-        }
-        .page-title { font-size: 26px; font-weight: bold; color: var(--text-dark); letter-spacing: 2px; }
-        .card {
-            background: #fff; border-radius: var(--radius); padding: 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 20px; border: 1px solid #e0dace;
-            position: relative;
-        }
-        .en-font { font-family: "Comic Sans MS", "Chalkboard SE", sans-serif; font-weight: bold; }
-        .btn-primary {
-            background: var(--primary); color: white; border: none; padding: 8px 20px;
-            border-radius: 4px; cursor: pointer; font-family: "Kaiti"; font-weight: bold; font-size: 1rem;
+        header h1 {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
 
-        /* 成绩卡片 */
-        .subject-stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 20px; }
-        .stat-card { background: #fdfbf7; padding: 15px; border: 1px solid #eee; border-radius: 8px; text-align: center; }
-        .stat-score { font-size: 1.8rem; font-weight: bold; font-family: "Comic Sans MS"; margin-bottom: 5px; }
-        .stat-trend { font-size: 0.8rem; padding: 2px 8px; border-radius: 10px; display: inline-block; }
-        .trend-up { background: #ffebeb; color: #b83b3b; }
-        .trend-down { background: #e8f5e9; color: #27ae60; }
-
-        /* 知识树 */
-        .knowledge-progress { background: #eee; height: 10px; border-radius: 5px; margin-bottom: 20px; overflow: hidden; }
-        .progress-bar { height: 100%; background: linear-gradient(90deg, #f1c40f, #e67e22); width: 0%; transition: width 0.5s; }
-        .k-item { display: flex; justify-content: space-between; padding: 12px 10px; border-bottom: 1px dashed #eee; font-size: 0.95rem; cursor: pointer; transition: 0.2s; align-items: center; }
-        .k-item:hover { background: #f9f9f9; }
-        .k-item.completed { color: #aaa; }
-        .k-item.completed span:first-child { text-decoration: line-through; }
-        .k-item.completed span:last-child { color: var(--primary); font-weight: bold; }
-
-        /* 习惯打卡 */
-        .habit-stats-panel { 
-            background: linear-gradient(135deg, #2c3e50, #34495e); color: white; 
-            padding: 20px; border-radius: 8px; margin-bottom: 20px; display: flex; justify-content: space-around; 
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
         }
-        .hs-num { font-size: 1.8rem; font-weight: bold; font-family: "Comic Sans MS"; color: var(--accent); }
-        .habit-item { 
-            display: flex; justify-content: space-between; align-items: center; 
-            padding: 15px; border: 1px solid #eee; border-radius: 8px; margin-bottom: 10px; cursor: pointer; background: #fff; transition: 0.2s;
+
+        /* Navigation */
+        nav {
+            background: var(--primary-green);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-        .habit-item.done { background: #fff5f5; border-color: var(--primary); }
-        .habit-check { width: 26px; height: 26px; border: 2px solid #ddd; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px;}
-        .habit-item.done .habit-check { background: var(--primary); border-color: var(--primary); color: white; }
 
-        /* 奖励网格 */
-        .reward-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-        .reward-card { text-align: center; padding: 20px; border: 1px solid #eee; border-radius: 8px; cursor: pointer; transition: 0.2s; position: relative;}
-        .reward-card:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); border-color: var(--accent); }
-        .reward-icon { font-size: 2.5rem; margin-bottom: 10px; }
-
-        /* --- 夫子后台加强版样式 --- */
-        .admin-section { margin-bottom: 30px; border: 1px solid #eee; border-radius: 8px; overflow: hidden; }
-        .admin-header { background: #fdfbf7; padding: 10px 20px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-weight: bold; color: #2c3e50; }
-        .admin-header:hover { background: #f2f0eb; }
-        .admin-body { padding: 20px; display: none; background: #fff; }
-        .admin-section.open .admin-body { display: block; }
-        .admin-table { width: 100%; border-collapse: collapse; margin-bottom: 10px; }
-        .admin-table th, .admin-table td { border: 1px solid #ddd; padding: 8px; text-align: center; }
-        .admin-table input { width: 100%; border: none; text-align: center; font-family: inherit; background: transparent; }
-        .btn-del { background: #ff7675; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 12px; }
-        .btn-add { background: #27ae60; color: white; border: none; padding: 5px 15px; border-radius: 4px; cursor: pointer; margin-top: 10px; }
-
-        /* 其他 */
-        .sch-table { width: 100%; border-collapse: collapse; }
-        .sch-table th { color: var(--primary); font-size: 14px; padding: 10px; border-bottom: 2px solid #eee; }
-        .sch-table td { padding: 12px; text-align: center; border-bottom: 1px solid #eee; color: #555; }
-        .today-col { background: #fdf2f2 !important; color: var(--primary) !important; font-weight: bold; }
-        .note-textarea {
-            width: 100%; height: 160px; padding: 10px 15px; font-family: "Kaiti"; font-size: 1.25rem;
-            background: #fdfbf7 linear-gradient(transparent 95%, var(--line-color) 95%); background-size: 100% 2.4rem; line-height: 2.4rem;
-            border: 1px solid #dcd6c8; border-radius: 8px; resize: none; outline: none;
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
         }
-        .admin-input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; margin-bottom: 15px; }
 
-        /* 页面显示 */
-        .page { display: none; opacity: 0; transition: opacity 0.4s; }
-        .page.active { display: block; opacity: 1; }
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.1rem;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+
+        nav a:hover {
+            background: var(--light-green);
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: white;
+            border-radius: 12px;
+            padding: 3rem;
+            margin: 2rem 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .hero-icon {
+            font-size: 5rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero h2 {
+            color: var(--primary-green);
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: #555;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Blog Posts Grid */
+        .posts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .post-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .post-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        .post-header {
+            background: var(--accent-green);
+            padding: 1.5rem;
+            color: white;
+        }
+
+        .post-header h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .post-date {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .post-content {
+            padding: 1.5rem;
+        }
+
+        .post-content p {
+            color: #555;
+            margin-bottom: 1rem;
+        }
+
+        .read-more {
+            display: inline-block;
+            color: var(--light-green);
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+
+        .read-more:hover {
+            color: var(--primary-green);
+        }
+
+        /* Stats Section */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 3rem 0;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .stat-icon {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary-green);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 1rem;
+        }
+
+        /* About Section */
+        .about {
+            background: white;
+            border-radius: 12px;
+            padding: 3rem;
+            margin: 2rem 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .about h2 {
+            color: var(--primary-green);
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .about-avatar {
+            text-align: center;
+        }
+
+        .avatar-circle {
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(135deg, var(--light-green), var(--accent-green));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5rem;
+            margin: 0 auto;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--primary-green);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 4rem;
+        }
+
+        footer p {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Tags */
+        .tags {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+
+        .tag {
+            background: var(--cream);
+            color: var(--primary-green);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2rem;
+            }
+
+            .about-content {
+                grid-template-columns: 1fr;
+            }
+
+            nav ul {
+                gap: 1rem;
+            }
+
+            .posts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
+    <header>
+        <h1>🌍 Green Earth Blog</h1>
+        <p>Living Sustainably, One Day at a Time</p>
+    </header>
 
-<div class="app-container">
-    <aside class="sidebar">
-        <div class="profile-card">
-            <div class="avatar">🐼</div>
-            <h2 style="margin:0; font-size:22px;">蓉宝同学</h2>
-            <div style="font-size:12px; opacity:0.7;">三年级 · 勤勉书童</div>
-            <div class="stats-row">
-                <div><div style="font-weight:bold; font-size:16px;" id="stat-days">1</div><div>修习天数</div></div>
-                <div style="width:1px; background:rgba(255,255,255,0.2);"></div>
-                <div><div style="font-weight:bold; font-size:16px;" id="stat-points">0</div><div>成就点</div></div>
-            </div>
-        </div>
-
-        <ul class="nav-menu">
-            <li class="nav-item active" onclick="switchPage('schedule', this)"><span>📅</span> 课表 · 日课</li>
-            <li class="nav-item" onclick="switchPage('grades', this)"><span>📊</span> 成绩 · 统计</li>
-            <li class="nav-item" onclick="switchPage('timer', this)"><span>⏳</span> 专注 · 沙漏</li>
-            <li class="nav-item" onclick="switchPage('knowledge', this)"><span>📜</span> 藏书 · 知识</li>
-            <li class="nav-item" onclick="switchPage('habits', this)"><span>✍️</span> 修身 · 习惯</li>
-            <li class="nav-item" onclick="switchPage('rewards', this)"><span>🎁</span> 犒赏 · 兑换</li>
-            <li class="nav-item" onclick="checkAdmin()" style="margin-top: 20px; color: #95a5a6; border-top: 1px solid rgba(255,255,255,0.1); padding-top:20px;"><span>🔒</span> 夫子后台</li>
+    <nav>
+        <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#blog">Blog</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li>
         </ul>
+    </nav>
 
-        <div class="semester-box">
-            <div class="semester-label"><span>光阴似箭</span><span id="semester-percent">0%</span></div>
-            <div class="semester-bar-bg"><div id="semester-bar" class="semester-bar-fill"></div></div>
-            <div style="font-size:10px; color:#95a5a6; margin-top:5px; text-align:right;">距离期末还有 <span id="days-left" style="color:#f1c40f">0</span> 天</div>
-        </div>
-    </aside>
+    <div class="container">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-icon">🌱</div>
+            <h2>Welcome to My Eco-Friendly Journey</h2>
+            <p>Join me as I explore sustainable living, environmental conservation, and simple steps we can all take to protect our beautiful planet. Together, we can make a difference!</p>
+        </section>
 
-    <main class="main-content">
-        <div class="top-quote-banner">
-            <div id="daily-quote-text" class="quote-text">载入中...</div>
-            <div id="daily-quote-author" class="quote-author"></div>
-        </div>
+        <!-- Stats Section -->
+        <section class="stats">
+            <div class="stat-card">
+                <div class="stat-icon">📝</div>
+                <div class="stat-number">247</div>
+                <div class="stat-label">Blog Posts</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🌳</div>
+                <div class="stat-number">1,523</div>
+                <div class="stat-label">Trees Planted</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">♻️</div>
+                <div class="stat-number">8,942</div>
+                <div class="stat-label">Items Recycled</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">💚</div>
+                <div class="stat-number">15,678</div>
+                <div class="stat-label">Community Members</div>
+            </div>
+        </section>
 
-        <div class="scroll-area">
-            
-            <div id="page-schedule" class="page active">
-                <div class="page-header">
-                    <div class="page-title">本周日课</div>
-                    <div style="color: #7f8c8d;" id="today-date" class="en-font">--</div>
-                </div>
-                <div style="display: grid; grid-template-columns: 2.5fr 1fr; gap: 20px;">
-                    <div class="card">
-                        <table class="sch-table" id="sch-table">
-                            <thead><tr><th>时辰</th><th>周一</th><th>周二</th><th>周三</th><th>周四</th><th>周五</th></tr></thead>
-                            <tbody></tbody>
-                        </table>
+        <!-- Blog Posts -->
+        <section id="blog">
+            <h2 style="text-align: center; color: var(--primary-green); font-size: 2.5rem; margin: 3rem 0 2rem;">Latest Articles</h2>
+
+            <div class="posts-grid">
+                <article class="post-card">
+                    <div class="post-header">
+                        <h3>🌊 Ocean Cleanup: Small Actions, Big Impact</h3>
+                        <div class="post-date">December 15, 2025</div>
                     </div>
-                    <div>
-                        <div class="card" style="background:#2c3e50; color:white; border:none;">
-                            <h3 style="margin-top:0;">🎒 明日书箱</h3>
-                            <div style="font-size:12px; opacity:0.8;">明日 <span id="tomorrow-day" class="en-font" style="color:#f1c40f">--</span>，请备：</div>
-                            <div id="pack-list" style="margin-top:10px;"></div>
+                    <div class="post-content">
+                        <p>Discovered amazing ways to reduce ocean plastic during my beach cleanup last weekend. Every piece of trash we remove helps marine life thrive. Here's what I learned about organizing community beach cleanups...</p>
+                        <div class="tags">
+                            <span class="tag">Ocean</span>
+                            <span class="tag">Community</span>
+                            <span class="tag">Action</span>
                         </div>
-                        <div class="card">
-                            <h4 style="margin:0 0 10px 0; color:#555;">📝 记事手札</h4>
-                            <textarea class="note-textarea" placeholder="在此处记录夫子布置的任务...&#10;书写时请平心静气。"></textarea>
+                        <a href="#" class="read-more">Read More →</a>
+                    </div>
+                </article>
+
+                <article class="post-card">
+                    <div class="post-header">
+                        <h3>🥗 Zero Waste Kitchen Essentials</h3>
+                        <div class="post-date">December 10, 2025</div>
+                    </div>
+                    <div class="post-content">
+                        <p>Transforming my kitchen into a zero-waste zone has been incredibly rewarding. From reusable containers to composting scraps, these simple changes have reduced my household waste by 75%...</p>
+                        <div class="tags">
+                            <span class="tag">Zero Waste</span>
+                            <span class="tag">Kitchen</span>
+                            <span class="tag">Tips</span>
                         </div>
+                        <a href="#" class="read-more">Read More →</a>
                     </div>
-                </div>
-            </div>
+                </article>
 
-            <div id="page-grades" class="page">
-                <div class="page-header">
-                    <div class="page-title">学业考评</div>
-                    <div style="font-size:14px; color:#666;">语数外 · 进阶图</div>
-                </div>
-                <div class="subject-stats-grid" id="subject-stats-cards"></div>
-                <div class="card">
-                    <h3 style="margin-top:0; color:#2c3e50;">三科趋势对比</h3>
-                    <div class="chart-container" style="height:300px; width:100%"><canvas id="scoreChart"></canvas></div>
-                </div>
-                <div class="card">
-                    <h3 style="margin-top:0; color:#2c3e50;">详细记录</h3>
-                    <table class="sch-table" style="text-align:left;">
-                        <thead><tr><th>日期</th><th>科目</th><th>分数</th><th>评语</th></tr></thead>
-                        <tbody id="score-table-body"></tbody>
-                    </table>
-                </div>
-            </div>
-
-            <div id="page-timer" class="page">
-                <div class="page-header"><div class="page-title">专注沙漏</div></div>
-                <div class="card" style="text-align:center; padding:40px;">
-                    <div style="font-size:60px;">⏳</div>
-                    <h2 style="margin:10px 0;">专注模式</h2>
-                    <div id="timer-display" style="font-size:4rem; color:var(--primary); margin:20px 0; font-family:'Comic Sans MS'">25:00</div>
-                    <button class="btn-primary" onclick="startTimer(25)">25分钟 (作业)</button>
-                    <button class="btn-primary" onclick="startTimer(10)">10分钟 (背诵)</button>
-                    <button style="border:1px solid #ccc; background:white; padding:8px 20px; border-radius:4px; margin-left:10px; cursor:pointer;" onclick="resetTimer()">重置</button>
-                </div>
-            </div>
-
-            <div id="page-knowledge" class="page">
-                <div class="page-header">
-                    <div class="page-title">藏书阁 · 知识通关</div>
-                    <div style="font-size:14px; color:#666;">人教版三年级上册</div>
-                </div>
-                <div style="margin-bottom:10px; font-size:14px;">本学期通关进度：<span id="k-progress-text">0%</span></div>
-                <div class="knowledge-progress"><div id="k-progress-bar" class="progress-bar"></div></div>
-                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
-                    <div class="card" id="k-list-chinese"></div>
-                    <div class="card" id="k-list-math"></div>
-                    <div class="card" id="k-list-english"></div>
-                </div>
-            </div>
-
-            <div id="page-habits" class="page">
-                <div class="page-header">
-                    <div class="page-title">每日修身</div>
-                    <div style="font-size:14px; color:#666;">点击打卡，再次点击可撤销</div>
-                </div>
-                <div class="habit-stats-panel">
-                    <div class="hs-item">
-                        <div class="hs-num" id="habit-total-count">0</div>
-                        <div style="font-size:12px;">本学期总打卡(次)</div>
+                <article class="post-card">
+                    <div class="post-header">
+                        <h3>🚴 Sustainable Transportation Guide</h3>
+                        <div class="post-date">December 5, 2025</div>
                     </div>
-                    <div class="hs-item">
-                        <div class="hs-num" id="habit-today-count">0</div>
-                        <div style="font-size:12px;">今日完成</div>
-                    </div>
-                </div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                    <div><h3 style="color:#27ae60;">📚 劝学篇 (学习)</h3><div id="habit-list-study"></div></div>
-                    <div><h3 style="color:#2980b9;">🌟 养正篇 (生活)</h3><div id="habit-list-life"></div></div>
-                </div>
-            </div>
-
-            <div id="page-rewards" class="page">
-                <div class="page-header"><div class="page-title">犒赏兑换</div></div>
-                <div class="reward-grid" id="reward-list"></div>
-            </div>
-
-            <div id="page-admin" class="page">
-                <div class="page-header">
-                    <div class="page-title">夫子后台</div>
-                    <button onclick="logoutAdmin()" style="border:1px solid #ccc; background:white; cursor:pointer;">退出后台</button>
-                </div>
-
-                <div class="admin-section open">
-                    <div class="admin-header" onclick="toggleAdminSection(this)">📝 成绩录入</div>
-                    <div class="admin-body">
-                        <div style="display:flex; gap:10px; margin-bottom:10px;">
-                            <input type="text" id="admin-date" class="admin-input" placeholder="日期 (11-25)" style="margin:0">
-                            <input type="number" id="admin-ch" class="admin-input" placeholder="语文" style="margin:0">
-                            <input type="number" id="admin-ma" class="admin-input" placeholder="数学" style="margin:0">
-                            <input type="number" id="admin-en" class="admin-input" placeholder="英语" style="margin:0">
+                    <div class="post-content">
+                        <p>Switching to cycling for my daily commute has changed my life! Not only am I reducing carbon emissions, but I'm also healthier and happier. Here's my complete guide to eco-friendly transportation...</p>
+                        <div class="tags">
+                            <span class="tag">Transport</span>
+                            <span class="tag">Health</span>
+                            <span class="tag">Carbon</span>
                         </div>
-                        <input type="text" id="admin-comment" class="admin-input" placeholder="评语..." style="margin-bottom:10px;">
-                        <button class="btn-primary" onclick="adminAddExam()">录入考评</button>
+                        <a href="#" class="read-more">Read More →</a>
                     </div>
-                </div>
+                </article>
 
-                <div class="admin-section">
-                    <div class="admin-header" onclick="toggleAdminSection(this)">📅 课表管理</div>
-                    <div class="admin-body">
-                        <table class="admin-table" id="admin-schedule-table">
-                            <thead><tr><th>时间</th><th>周一</th><th>周二</th><th>周三</th><th>周四</th><th>周五</th></tr></thead>
-                            <tbody></tbody>
-                        </table>
-                        <button class="btn-primary" onclick="saveScheduleAdmin()">保存课表</button>
+                <article class="post-card">
+                    <div class="post-header">
+                        <h3>🌿 Urban Gardening for Beginners</h3>
+                        <div class="post-date">November 28, 2025</div>
                     </div>
-                </div>
-
-                <div class="admin-section">
-                    <div class="admin-header" onclick="toggleAdminSection(this)">✍️ 修身习惯设置</div>
-                    <div class="admin-body">
-                        <ul id="admin-habit-list" style="padding-left:20px;"></ul>
-                        <div style="margin-top:10px; border-top:1px dashed #ccc; padding-top:10px;">
-                            <input type="text" id="new-habit-txt" placeholder="新习惯名称" style="padding:5px; width:200px;">
-                            <select id="new-habit-type" style="padding:5px;"><option value="study">学习类</option><option value="life">生活类</option></select>
-                            <button class="btn-add" onclick="addHabitAdmin()">添加</button>
+                    <div class="post-content">
+                        <p>You don't need a big backyard to grow your own food! My balcony garden now produces fresh herbs, tomatoes, and peppers. Learn how to start your own urban garden with limited space...</p>
+                        <div class="tags">
+                            <span class="tag">Gardening</span>
+                            <span class="tag">Urban</span>
+                            <span class="tag">Food</span>
                         </div>
+                        <a href="#" class="read-more">Read More →</a>
                     </div>
-                </div>
+                </article>
 
-                <div class="admin-section">
-                    <div class="admin-header" onclick="toggleAdminSection(this)">🎁 奖励项目设置</div>
-                    <div class="admin-body">
-                        <ul id="admin-reward-list" style="padding-left:20px;"></ul>
-                        <div style="margin-top:10px; border-top:1px dashed #ccc; padding-top:10px;">
-                            <input type="text" id="new-reward-name" placeholder="奖励名称" style="padding:5px; width:150px;">
-                            <input type="number" id="new-reward-cost" placeholder="积分" style="padding:5px; width:80px;">
-                            <input type="text" id="new-reward-icon" placeholder="图标(如📺)" style="padding:5px; width:80px;">
-                            <button class="btn-add" onclick="addRewardAdmin()">添加</button>
-                        </div>
+                <article class="post-card">
+                    <div class="post-header">
+                        <h3>☀️ Renewable Energy at Home</h3>
+                        <div class="post-date">November 20, 2025</div>
                     </div>
+                    <div class="post-content">
+                        <p>Installing solar panels was one of the best decisions I've made! My electricity bills are down 80%, and I'm powering my home with clean energy. Here's everything you need to know about going solar...</p>
+                        <div class="tags">
+                            <span class="tag">Solar</span>
+                            <span class="tag">Energy</span>
+                            <span class="tag">Home</span>
+                        </div>
+                        <a href="#" class="read-more">Read More →</a>
+                    </div>
+                </article>
+
+                <article class="post-card">
+                    <div class="post-header">
+                        <h3>🐝 Creating a Pollinator Paradise</h3>
+                        <div class="post-date">November 12, 2025</div>
+                    </div>
+                    <div class="post-content">
+                        <p>Bees and butterflies are essential to our ecosystem. I've transformed my garden into a haven for pollinators with native plants and natural habitats. Watch your garden come alive with these simple tips...</p>
+                        <div class="tags">
+                            <span class="tag">Wildlife</span>
+                            <span class="tag">Bees</span>
+                            <span class="tag">Garden</span>
+                        </div>
+                        <a href="#" class="read-more">Read More →</a>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="about">
+            <h2>About Me</h2>
+            <div class="about-content">
+                <div class="about-avatar">
+                    <div class="avatar-circle">🌻</div>
                 </div>
-                
-                <div style="text-align:right; margin-top:20px;">
-                    <button onclick="if(confirm('确定要清空所有数据吗？慎重！')){localStorage.clear();location.reload();}" style="color:red; background:none; border:none; cursor:pointer;">⚠️ 恢复出厂设置</button>
+                <div>
+                    <p style="font-size: 1.1rem; margin-bottom: 1rem;">
+                        Hello! I'm Emma Green, an environmental advocate and sustainability blogger based in Portland, Oregon. For the past 8 years, I've been on a mission to live a more eco-friendly lifestyle and inspire others to do the same.
+                    </p>
+                    <p style="font-size: 1.1rem; margin-bottom: 1rem;">
+                        What started as a simple desire to reduce my carbon footprint has evolved into a full-blown passion for environmental conservation. Through this blog, I share practical tips, personal experiences, and scientific insights about sustainable living.
+                    </p>
+                    <p style="font-size: 1.1rem; margin-bottom: 1rem;">
+                        I believe that every small action counts. Whether it's choosing reusable bags, composting food waste, or supporting local farmers, we all have the power to make a positive impact on our planet.
+                    </p>
+                    <p style="font-size: 1.1rem; color: var(--light-green); font-weight: bold;">
+                        "We don't need a handful of people doing zero waste perfectly. We need millions of people doing it imperfectly." - Anne Marie Bonneau
+                    </p>
                 </div>
             </div>
-        </div>
-    </main>
-</div>
+        </section>
+    </div>
 
-<script>
-    // ================= 默认数据 =================
-    const DEFAULT_QUOTES = [
-        {txt:"", auth:""}, 
-        {txt:"不积跬步，无以至千里。", auth:"荀子"}, {txt:"温故而知新，可以为师矣。", auth:"孔子"},
-        {txt:"Practice makes perfect.", auth:"熟能生巧"}, {txt:"业精于勤，荒于嬉。", auth:"韩愈"},
-        {txt:"读书破万卷，下笔如有神。", auth:"杜甫"}, {txt:"Where there is a will, there is a way.", auth:"有志者事竟成"},
-        {txt:"少壮不努力，老大徒伤悲。", auth:"汉乐府"}, {txt:"学而不思则罔，思而不学则殆。", auth:"孔子"},
-        {txt:"千里之行，始于足下。", auth:"老子"}, {txt:"No pain, no gain.", auth:"一分耕耘"},
-        {txt:"三人行，必有我师焉。", auth:"孔子"}, {txt:"宝剑锋从磨砺出，梅花香自苦寒来。", auth:"警世贤文"},
-        {txt:"Time is money.", auth:"时间就是金钱"}, {txt:"知之为知之，不知为不知。", auth:"孔子"},
-        {txt:"天行健，君子以自强不息。", auth:"易经"}, {txt:"Failures are the pillars of success.", auth:"失败是成功之母"},
-        {txt:"欲穷千里目，更上一层楼。", auth:"王之涣"}, {txt:"路漫漫其修远兮，吾将上下而求索。", auth:"屈原"},
-        {txt:"Knowledge is power.", auth:"知识就是力量"}, {txt:"纸上得来终觉浅，绝知此事要躬行。", auth:"陆游"},
-        {txt:"一寸光阴一寸金。", auth:"王贞白"}, {txt:"Better late than never.", auth:"亡羊补牢"},
-        {txt:"黑发不知勤学早，白首方悔读书迟。", auth:"颜真卿"}, {txt:"玉不琢，不成器。", auth:"三字经"},
-        {txt:"Honesty is the best policy.", auth:"诚实是上策"}, {txt:"勿以恶小而为之。", auth:"刘备"},
-        {txt:"敏而好学，不耻下问。", auth:"孔子"}, {txt:"Actions speak louder than words.", auth:"行胜于言"},
-        {txt:"书山有路勤为径。", auth:"韩愈"}, {txt:"博学之，审问之。", auth:"中庸"}, {txt:"Stay hungry.", auth:"乔布斯"}
-    ];
-
-    const DEFAULT_EXAMS = [
-        { date: '10-08', ch: 85, ma: 90, en: 88, comment: "开学考" },
-        { date: '11-05', ch: 92, ma: 92, en: 94, comment: "期中考" }
-    ];
-
-    const DEFAULT_SCHEDULE = [
-        {time:'08:00', data:['语文','数学','语文','英语','语文']},
-        {time:'09:00', data:['数学','语文','科学','数学','数学']},
-        {time:'10:00', data:['英语','美术','体育','语文','英语']},
-        {time:'14:00', data:['体育','道法','社团','信息','班会']},
-        {time:'15:00', data:['自习','自习','阅读','写字','劳动']}
-    ];
-
-    const DEFAULT_HABITS = [
-        {id:1, type:'study', txt:'完成学校作业'}, {id:2, type:'study', txt:'阅读20分钟'},
-        {id:4, type:'life', txt:'按时起床'}, {id:6, type:'life', txt:'做一件家务'}
-    ];
-
-    const DEFAULT_REWARDS = [
-        {name:'看电视(1集)', cost:50, icon:'📺'}, {name:'玩游戏(20分)', cost:80, icon:'📱'},
-        {name:'冰淇淋', cost:120, icon:'🍦'}, {name:'盲盒', cost:300, icon:'🧸'}
-    ];
-
-    const KNOWLEDGE_DATA = {
-        chinese: ["1. 大青树下的小学", "2. 花的学校", "3. 不懂就要问", "古诗：山行", "古诗：赠刘景文", "古诗：夜书所见", "6. 秋天的雨", "18. 富饶的西沙群岛", "24. 司马光"],
-        math: ["1. 时分秒", "2. 万以内加减", "3. 测量", "5. 倍的认识", "6. 多位数乘一位数", "7. 长方形和正方形", "8. 分数初步认识"],
-        english: ["Unit 1 Hello!", "Unit 2 Colours", "Unit 3 Look at me!", "Unit 4 We love animals", "Unit 5 Let's eat!", "Unit 6 Happy birthday!"]
-    };
-
-    // ================= 核心应用状态 =================
-    let app = {
-        points: 0,
-        startDate: new Date().getTime(),
-        exams: JSON.parse(JSON.stringify(DEFAULT_EXAMS)),
-        schedule: JSON.parse(JSON.stringify(DEFAULT_SCHEDULE)),
-        habits: JSON.parse(JSON.stringify(DEFAULT_HABITS)),
-        rewards: JSON.parse(JSON.stringify(DEFAULT_REWARDS)),
-        extraQuotes: [],
-        kStatus: {},
-        habitStats: { total: 0, today: {} } 
-    };
-    
-    // 学期时间
-    const SEMESTER_START = new Date("2024-09-01").getTime();
-    const SEMESTER_END = new Date("2025-01-20").getTime();
-    
-    let myChart = null;
-    let timerInterval = null;
-
-    window.onload = function() {
-        const save = localStorage.getItem('panda_v16_admin');
-        if(save) app = { ...app, ...JSON.parse(save) };
-
-        renderBaseInfo();
-        loadDailyQuote();
-        renderSchedule();
-        renderSemesterProgress();
-        initChartAndStats();
-        renderKnowledge();
-        renderHabits();
-        renderRewards();
-    };
-
-    function saveData() {
-        localStorage.setItem('panda_v16_admin', JSON.stringify(app));
-        renderBaseInfo();
-    }
-    function renderBaseInfo() {
-        document.getElementById('stat-points').innerText = app.points;
-        const diff = Math.ceil((new Date().getTime() - app.startDate) / 86400000);
-        document.getElementById('stat-days').innerText = diff || 1;
-        document.getElementById('today-date').innerText = new Date().toLocaleDateString();
-    }
-
-    // --- 1. 学期进度 ---
-    function renderSemesterProgress() {
-        const now = new Date().getTime();
-        const total = SEMESTER_END - SEMESTER_START;
-        let elapsed = now - SEMESTER_START;
-        if (elapsed < 0) elapsed = 0; if (elapsed > total) elapsed = total;
-        const percent = Math.round((elapsed / total) * 100);
-        const daysLeft = Math.ceil((SEMESTER_END - now) / 86400000);
-        document.getElementById('semester-bar').style.width = percent + '%';
-        document.getElementById('semester-percent').innerText = percent + '%';
-        document.getElementById('days-left').innerText = daysLeft > 0 ? daysLeft : 0;
-    }
-
-    // --- 2. 课表 ---
-    function renderSchedule() {
-        const tbody = document.querySelector('#sch-table tbody');
-        const day = new Date().getDay(); 
-        const weekEn = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-        const nextDay = (day===5||day===6) ? 1 : day+1;
-        document.getElementById('tomorrow-day').innerText = weekEn[nextDay]; 
-
-        let html = '';
-        app.schedule.forEach(row => {
-            html += `<tr><td class="en-font">${row.time}</td>`;
-            row.data.forEach((sub, idx) => {
-                const isToday = (idx+1) === day;
-                html += `<td class="${isToday?'today-col':''} ${sub==='英语'?'en-font':''}">${sub}</td>`;
-            });
-            html += `</tr>`;
-        });
-        tbody.innerHTML = html;
-        
-        const nextSub = app.schedule.map(r => r.data[nextDay-1]);
-        const packDiv = document.getElementById('pack-list');
-        let items = new Set();
-        if(nextSub.includes('语文')) items.add('语文书'); if(nextSub.includes('数学')) items.add('数学书'); if(nextSub.includes('英语')) items.add('English Book');
-        let phtml = ''; items.forEach(i => phtml += `<span style="background:rgba(255,255,255,0.2); padding:5px 10px; border-radius:4px; font-size:12px; margin-right:5px;">${i}</span>`);
-        packDiv.innerHTML = phtml || "无需特殊准备";
-    }
-
-    // --- 3. 习惯打卡 ---
-    function renderHabits() {
-        const todayKey = new Date().toDateString(); 
-        if(!app.habitStats.today[todayKey]) app.habitStats.today[todayKey] = [];
-        const todayDoneIds = app.habitStats.today[todayKey];
-
-        const fill = (type, elId) => {
-            let html = '';
-            app.habits.filter(h => h.type === type).forEach(h => {
-                const isDone = todayDoneIds.includes(h.id);
-                html += `<div class="habit-item ${isDone?'done':''}" onclick="toggleHabit(${h.id}, '${todayKey}')">
-                    <div><b>${h.txt}</b></div><div class="habit-check">${isDone?'✔':''}</div>
-                </div>`;
-            });
-            document.getElementById(elId).innerHTML = html;
-        };
-        fill('study', 'habit-list-study'); fill('life', 'habit-list-life');
-        document.getElementById('habit-total-count').innerText = app.habitStats.total;
-        document.getElementById('habit-today-count').innerText = `${todayDoneIds.length} / ${app.habits.length}`;
-    }
-
-    function toggleHabit(id, todayKey) {
-        const list = app.habitStats.today[todayKey];
-        const idx = list.indexOf(id);
-        if(idx > -1) { // 撤销
-            list.splice(idx, 1); app.habitStats.total--; app.points -= 5;
-        } else { // 打卡
-            list.push(id); app.habitStats.total++; app.points += 5;
-        }
-        saveData(); renderHabits();
-    }
-
-    // --- 4. 奖励 ---
-    function renderRewards() {
-        const div = document.getElementById('reward-list');
-        let html = '';
-        app.rewards.forEach((r, idx) => {
-            html += `<div class="reward-card" onclick="redeemReward(${idx})">
-                <div class="reward-icon">${r.icon}</div>
-                <div class="en-font"><b>${r.name}</b></div>
-                <div style="color:#b83b3b">${r.cost} 积分</div>
-            </div>`;
-        });
-        div.innerHTML = html;
-    }
-    function redeemReward(idx) {
-        const r = app.rewards[idx];
-        if(app.points >= r.cost) {
-            if(confirm(`确定消耗 ${r.cost} 积分兑换 [${r.name}] 吗？`)) {
-                app.points -= r.cost; saveData(); alert("兑换成功！");
-            }
-        } else {
-            alert("积分不足！");
-        }
-    }
-
-    // --- 其他渲染函数 (成绩、知识树、名言) ---
-    function loadDailyQuote() {
-        const day = new Date().getDate(); 
-        let q = (app.extraQuotes.length > 0) ? app.extraQuotes[app.extraQuotes.length-1] : DEFAULT_QUOTES[day > 30 ? 1 : day];
-        const txtEl = document.getElementById('daily-quote-text');
-        txtEl.innerText = q.txt; txtEl.className = /[a-zA-Z]/.test(q.txt) ? "quote-text en-font" : "quote-text";
-        document.getElementById('daily-quote-author').innerText = "—— " + q.auth;
-    }
-    function renderKnowledge() {
-        let total = 0, done = 0;
-        ['chinese', 'math', 'english'].forEach(sub => {
-            const div = document.getElementById('k-list-'+sub);
-            let html = `<div style="font-weight:bold;margin-bottom:10px;color:${sub=='chinese'?'#b83b3b':(sub=='math'?'#2980b9':'#27ae60')}">${sub=='chinese'?'📖 语文':(sub=='math'?'📐 数学':'🔤 英语')}</div>`;
-            KNOWLEDGE_DATA[sub].forEach((item, idx) => {
-                total++; const key = `${sub}-${idx}`; const isDone = app.kStatus[key]; if(isDone) done++;
-                html += `<div class="k-item ${isDone?'completed':''}" onclick="toggleK('${key}')"><span>${item}</span><span>${isDone?'✅':'⚪'}</span></div>`;
-            });
-            div.innerHTML = html;
-        });
-        const pct = total===0?0:Math.round((done/total)*100);
-        document.getElementById('k-progress-bar').style.width = pct+'%'; document.getElementById('k-progress-text').innerText = pct+'%';
-    }
-    function toggleK(k) { app.kStatus[k]=!app.kStatus[k]; if(app.kStatus[k]) app.points+=2; else app.points-=2; saveData(); renderKnowledge(); }
-    function initChartAndStats() {
-        const ctx = document.getElementById('scoreChart').getContext('2d');
-        const labels = app.exams.map(d => d.date);
-        Chart.defaults.font.family = "'Comic Sans MS', 'Kaiti'";
-        if(myChart) myChart.destroy();
-        myChart = new Chart(ctx, {
-            type: 'line', data: { labels: labels, datasets: [
-                {label:'语文',data:app.exams.map(d=>d.ch),borderColor:'#b83b3b',tension:0.3},
-                {label:'数学',data:app.exams.map(d=>d.ma),borderColor:'#2980b9',tension:0.3},
-                {label:'英语',data:app.exams.map(d=>d.en),borderColor:'#27ae60',tension:0.3}
-            ]}, options:{responsive:true,maintainAspectRatio:false,scales:{y:{min:60,max:100}}}
-        });
-        let cardsHtml = '';
-        [{k:'ch',n:'语文',c:'#b83b3b'},{k:'ma',n:'数学',c:'#2980b9'},{k:'en',n:'英语',c:'#27ae60'}].forEach(s => {
-            const sc = app.exams.map(e=>parseInt(e[s.k])); const now=sc[sc.length-1]||0; const pre=sc.length>1?sc[sc.length-2]:now; const d=now-pre;
-            let th = d>0?`<span class="trend-down">▲+${d}</span>`:(d<0?`<span class="trend-up">▼${d}</span>`:'-');
-            cardsHtml+=`<div class="stat-card" style="border-top:4px solid ${s.c}"><h4 style="color:${s.c}">${s.n}</h4><div class="stat-score">${now}</div><div class="stat-trend">${th}</div></div>`;
-        });
-        document.getElementById('subject-stats-cards').innerHTML = cardsHtml;
-        let thtml = ''; [...app.exams].reverse().forEach(r=>{ thtml+=`<tr><td class="en-font">${r.date}</td><td><span style="color:#b83b3b">语${r.ch}</span>/<span style="color:#2980b9">数${r.ma}</span>/<span style="color:#27ae60">外${r.en}</span></td><td class="en-font"><b>${Math.round((parseInt(r.ch)+parseInt(r.ma)+parseInt(r.en))/3)}</b></td><td style="font-size:12px">${r.comment}</td></tr>`; });
-        document.getElementById('score-table-body').innerHTML = thtml;
-    }
-
-    // --- 后台逻辑 ---
-    function checkAdmin() { if(prompt("请输入密码 (8888):")==="8888") switchPage('admin',null); }
-    function logoutAdmin() { switchPage('schedule', document.querySelector('.nav-item')); }
-    function toggleAdminSection(el) { el.parentElement.classList.toggle('open'); if(el.parentElement.classList.contains('open')) { renderAdminSchedule(); renderAdminHabits(); renderAdminRewards(); } }
-
-    function renderAdminSchedule() {
-        const tbody = document.querySelector('#admin-schedule-table tbody');
-        let html = '';
-        app.schedule.forEach((row, rIdx) => {
-            html += `<tr><td><input value="${row.time}" onchange="app.schedule[${rIdx}].time=this.value"></td>`;
-            row.data.forEach((cell, cIdx) => {
-                html += `<td><input value="${cell}" onchange="app.schedule[${rIdx}].data[${cIdx}]=this.value"></td>`;
-            });
-            html += `</tr>`;
-        });
-        tbody.innerHTML = html;
-    }
-    function saveScheduleAdmin() { saveData(); renderSchedule(); alert('课表已更新'); }
-    
-    function renderAdminHabits() {
-        const ul = document.getElementById('admin-habit-list');
-        ul.innerHTML = app.habits.map((h, i) => `<li>[${h.type=='study'?'学习':'生活'}] ${h.txt} <button class="btn-del" onclick="app.habits.splice(${i},1);saveData();renderAdminHabits();renderHabits();">删</button></li>`).join('');
-    }
-    function addHabitAdmin() {
-        const txt=document.getElementById('new-habit-txt').value; const type=document.getElementById('new-habit-type').value;
-        if(txt){ app.habits.push({id:Date.now(), type, txt}); saveData(); renderAdminHabits(); renderHabits(); document.getElementById('new-habit-txt').value=''; }
-    }
-
-    function renderAdminRewards() {
-        const ul = document.getElementById('admin-reward-list');
-        ul.innerHTML = app.rewards.map((r, i) => `<li>${r.icon} ${r.name} (${r.cost}) <button class="btn-del" onclick="app.rewards.splice(${i},1);saveData();renderAdminRewards();renderRewards();">删</button></li>`).join('');
-    }
-    function addRewardAdmin() {
-        const name=document.getElementById('new-reward-name').value; const cost=document.getElementById('new-reward-cost').value; const icon=document.getElementById('new-reward-icon').value;
-        if(name&&cost){ app.rewards.push({name, cost:parseInt(cost), icon:icon||'🎁'}); saveData(); renderAdminRewards(); renderRewards(); }
-    }
-    function adminAddExam() {
-        const date=document.getElementById('admin-date').value; const ch=document.getElementById('admin-ch').value;
-        const ma=document.getElementById('admin-ma').value; const en=document.getElementById('admin-en').value;
-        if(date&&ch) { app.exams.push({date, ch, ma, en, comment:document.getElementById('admin-comment').value||'新录入'}); saveData(); initChartAndStats(); alert('录入成功'); }
-    }
-
-    function startTimer(m) { clearInterval(timerInterval); let s=m*60; document.getElementById('timer-display').innerText=`${m}:00`; timerInterval=setInterval(()=>{s--;const mi=Math.floor(s/60).toString().padStart(2,'0');const se=(s%60).toString().padStart(2,'0');document.getElementById('timer-display').innerText=`${mi}:${se}`;if(s<=0){clearInterval(timerInterval);alert('时间到');app.points+=5;saveData();}},1000); }
-    function resetTimer() { clearInterval(timerInterval); document.getElementById('timer-display').innerText="25:00"; }
-    function switchPage(pid,btn) { document.querySelectorAll('.page').forEach(p=>{p.classList.remove('active');p.style.display='none'}); const t=document.getElementById('page-'+pid); if(t){t.style.display='block';setTimeout(()=>t.classList.add('active'),10);} if(btn){document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));btn.classList.add('active');}}
-
-</script>
+    <footer>
+        <p>&copy; 2025 Green Earth Blog. All rights reserved.</p>
+        <p>Living sustainably for a better tomorrow 🌍</p>
+        <p style="margin-top: 1rem; font-size: 0.9rem; opacity: 0.8;">
+            Contact: emma@greenearthblog.com | Follow me on social media
+        </p>
+    </footer>
 </body>
 </html>
