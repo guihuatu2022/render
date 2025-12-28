@@ -1,4 +1,4 @@
-name: "Build and push images"
+name: "Build and Deploy"
 
 on:
   workflow_dispatch:
@@ -11,9 +11,9 @@ permissions:
   packages: write
 
 jobs:
-  Building:
+  build:
       runs-on: ubuntu-latest
-      name: "Build V2ray images"
+      name: "Build Docker Image"
       env:
         REGISTRY: ghcr.io
         IMAGE_NAME: ${{ github.repository }}
@@ -39,7 +39,7 @@ jobs:
         run: |
           echo "IMAGE_NAME_LOWER=$(echo ${{ env.IMAGE_NAME }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
 
-      - name: Build and push images to GitHub Container Registry
+      - name: Build and push Docker image
         uses: docker/build-push-action@v4.1.1
         with:
           context: .
@@ -48,3 +48,7 @@ jobs:
           tags: |
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LOWER }}:latest
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LOWER }}:${{ github.sha }}
+          labels: |
+            org.opencontainers.image.title=Green Earth Blog
+            org.opencontainers.image.description=A sustainable living blog platform
+            org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}

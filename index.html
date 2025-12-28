@@ -41,6 +41,7 @@
             font-size: 3rem;
             margin-bottom: 0.5rem;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            cursor: pointer;
         }
 
         header p {
@@ -73,6 +74,7 @@
             padding: 0.5rem 1rem;
             border-radius: 4px;
             transition: background 0.3s;
+            cursor: pointer;
         }
 
         nav a:hover {
@@ -128,6 +130,7 @@
             overflow: hidden;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
         }
 
         .post-card:hover {
@@ -275,6 +278,116 @@
             font-weight: bold;
         }
 
+        /* Article Detail Page */
+        .article-detail {
+            display: none;
+            max-width: 900px;
+            margin: 2rem auto;
+            background: white;
+            border-radius: 12px;
+            padding: 3rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .article-detail.active {
+            display: block;
+        }
+
+        .back-button {
+            display: inline-block;
+            background: var(--light-green);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 6px;
+            text-decoration: none;
+            margin-bottom: 2rem;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .back-button:hover {
+            background: var(--primary-green);
+        }
+
+        .article-detail h1 {
+            color: var(--primary-green);
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .article-meta {
+            color: #666;
+            font-size: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--cream);
+        }
+
+        .article-detail h2 {
+            color: var(--light-green);
+            font-size: 1.8rem;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .article-detail h3 {
+            color: var(--text-dark);
+            font-size: 1.4rem;
+            margin-top: 1.5rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .article-detail p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+            color: #444;
+        }
+
+        .article-detail ul, .article-detail ol {
+            margin-left: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .article-detail li {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 0.8rem;
+            color: #444;
+        }
+
+        .article-detail blockquote {
+            border-left: 4px solid var(--accent-green);
+            padding-left: 1.5rem;
+            margin: 2rem 0;
+            font-style: italic;
+            color: #555;
+            background: var(--cream);
+            padding: 1.5rem;
+            border-radius: 4px;
+        }
+
+        .article-image {
+            text-align: center;
+            margin: 2rem 0;
+            padding: 2rem;
+            background: var(--cream);
+            border-radius: 8px;
+        }
+
+        .article-image-placeholder {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .page-section {
+            display: none;
+        }
+
+        .page-section.active {
+            display: block;
+        }
+
         @media (max-width: 768px) {
             header h1 {
                 font-size: 2rem;
@@ -291,161 +404,84 @@
             .posts-grid {
                 grid-template-columns: 1fr;
             }
+
+            .article-detail {
+                padding: 1.5rem;
+            }
+
+            .article-detail h1 {
+                font-size: 2rem;
+            }
         }
     </style>
 </head>
 <body>
     <header>
-        <h1>🌍 Green Earth Blog</h1>
+        <h1 onclick="showHome()">🌍 Green Earth Blog</h1>
         <p>Living Sustainably, One Day at a Time</p>
     </header>
 
     <nav>
         <ul>
-            <li><a href="#home">Home</a></li>
-            <li><a href="#blog">Blog</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#contact">Contact</a></li>
+            <li><a onclick="showHome()">Home</a></li>
+            <li><a onclick="showSection('blog')">Blog</a></li>
+            <li><a onclick="showSection('about')">About</a></li>
+            <li><a onclick="showSection('contact')">Contact</a></li>
         </ul>
     </nav>
 
     <div class="container">
-        <!-- Hero Section -->
-        <section class="hero">
-            <div class="hero-icon">🌱</div>
-            <h2>Welcome to My Eco-Friendly Journey</h2>
-            <p>Join me as I explore sustainable living, environmental conservation, and simple steps we can all take to protect our beautiful planet. Together, we can make a difference!</p>
-        </section>
+        <!-- Home Page -->
+        <div id="home-page" class="page-section active">
+            <!-- Hero Section -->
+            <section class="hero">
+                <div class="hero-icon">🌱</div>
+                <h2>Welcome to My Eco-Friendly Journey</h2>
+                <p>Join me as I explore sustainable living, environmental conservation, and simple steps we can all take to protect our beautiful planet. Together, we can make a difference!</p>
+            </section>
 
-        <!-- Stats Section -->
-        <section class="stats">
-            <div class="stat-card">
-                <div class="stat-icon">📝</div>
-                <div class="stat-number">247</div>
-                <div class="stat-label">Blog Posts</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon">🌳</div>
-                <div class="stat-number">1,523</div>
-                <div class="stat-label">Trees Planted</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon">♻️</div>
-                <div class="stat-number">8,942</div>
-                <div class="stat-label">Items Recycled</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon">💚</div>
-                <div class="stat-number">15,678</div>
-                <div class="stat-label">Community Members</div>
-            </div>
-        </section>
+            <!-- Stats Section -->
+            <section class="stats">
+                <div class="stat-card">
+                    <div class="stat-icon">📝</div>
+                    <div class="stat-number">247</div>
+                    <div class="stat-label">Blog Posts</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🌳</div>
+                    <div class="stat-number">1,523</div>
+                    <div class="stat-label">Trees Planted</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">♻️</div>
+                    <div class="stat-number">8,942</div>
+                    <div class="stat-label">Items Recycled</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">💚</div>
+                    <div class="stat-number">15,678</div>
+                    <div class="stat-label">Community Members</div>
+                </div>
+            </section>
+        </div>
 
-        <!-- Blog Posts -->
-        <section id="blog">
+        <!-- Blog Section -->
+        <section id="blog" class="page-section">
             <h2 style="text-align: center; color: var(--primary-green); font-size: 2.5rem; margin: 3rem 0 2rem;">Latest Articles</h2>
 
-            <div class="posts-grid">
-                <article class="post-card">
-                    <div class="post-header">
-                        <h3>🌊 Ocean Cleanup: Small Actions, Big Impact</h3>
-                        <div class="post-date">December 15, 2025</div>
-                    </div>
-                    <div class="post-content">
-                        <p>Discovered amazing ways to reduce ocean plastic during my beach cleanup last weekend. Every piece of trash we remove helps marine life thrive. Here's what I learned about organizing community beach cleanups...</p>
-                        <div class="tags">
-                            <span class="tag">Ocean</span>
-                            <span class="tag">Community</span>
-                            <span class="tag">Action</span>
-                        </div>
-                        <a href="#" class="read-more">Read More →</a>
-                    </div>
-                </article>
-
-                <article class="post-card">
-                    <div class="post-header">
-                        <h3>🥗 Zero Waste Kitchen Essentials</h3>
-                        <div class="post-date">December 10, 2025</div>
-                    </div>
-                    <div class="post-content">
-                        <p>Transforming my kitchen into a zero-waste zone has been incredibly rewarding. From reusable containers to composting scraps, these simple changes have reduced my household waste by 75%...</p>
-                        <div class="tags">
-                            <span class="tag">Zero Waste</span>
-                            <span class="tag">Kitchen</span>
-                            <span class="tag">Tips</span>
-                        </div>
-                        <a href="#" class="read-more">Read More →</a>
-                    </div>
-                </article>
-
-                <article class="post-card">
-                    <div class="post-header">
-                        <h3>🚴 Sustainable Transportation Guide</h3>
-                        <div class="post-date">December 5, 2025</div>
-                    </div>
-                    <div class="post-content">
-                        <p>Switching to cycling for my daily commute has changed my life! Not only am I reducing carbon emissions, but I'm also healthier and happier. Here's my complete guide to eco-friendly transportation...</p>
-                        <div class="tags">
-                            <span class="tag">Transport</span>
-                            <span class="tag">Health</span>
-                            <span class="tag">Carbon</span>
-                        </div>
-                        <a href="#" class="read-more">Read More →</a>
-                    </div>
-                </article>
-
-                <article class="post-card">
-                    <div class="post-header">
-                        <h3>🌿 Urban Gardening for Beginners</h3>
-                        <div class="post-date">November 28, 2025</div>
-                    </div>
-                    <div class="post-content">
-                        <p>You don't need a big backyard to grow your own food! My balcony garden now produces fresh herbs, tomatoes, and peppers. Learn how to start your own urban garden with limited space...</p>
-                        <div class="tags">
-                            <span class="tag">Gardening</span>
-                            <span class="tag">Urban</span>
-                            <span class="tag">Food</span>
-                        </div>
-                        <a href="#" class="read-more">Read More →</a>
-                    </div>
-                </article>
-
-                <article class="post-card">
-                    <div class="post-header">
-                        <h3>☀️ Renewable Energy at Home</h3>
-                        <div class="post-date">November 20, 2025</div>
-                    </div>
-                    <div class="post-content">
-                        <p>Installing solar panels was one of the best decisions I've made! My electricity bills are down 80%, and I'm powering my home with clean energy. Here's everything you need to know about going solar...</p>
-                        <div class="tags">
-                            <span class="tag">Solar</span>
-                            <span class="tag">Energy</span>
-                            <span class="tag">Home</span>
-                        </div>
-                        <a href="#" class="read-more">Read More →</a>
-                    </div>
-                </article>
-
-                <article class="post-card">
-                    <div class="post-header">
-                        <h3>🐝 Creating a Pollinator Paradise</h3>
-                        <div class="post-date">November 12, 2025</div>
-                    </div>
-                    <div class="post-content">
-                        <p>Bees and butterflies are essential to our ecosystem. I've transformed my garden into a haven for pollinators with native plants and natural habitats. Watch your garden come alive with these simple tips...</p>
-                        <div class="tags">
-                            <span class="tag">Wildlife</span>
-                            <span class="tag">Bees</span>
-                            <span class="tag">Garden</span>
-                        </div>
-                        <a href="#" class="read-more">Read More →</a>
-                    </div>
-                </article>
+            <div class="posts-grid" id="posts-grid">
+                <!-- Posts will be generated by JavaScript -->
             </div>
         </section>
 
+        <!-- Article Detail -->
+        <article id="article-detail" class="article-detail">
+            <a class="back-button" onclick="backToBlog()">← Back to Blog</a>
+            <div id="article-content"></div>
+        </article>
+
         <!-- About Section -->
-        <section id="about" class="about">
+        <section id="about" class="page-section about">
             <h2>About Me</h2>
             <div class="about-content">
                 <div class="about-avatar">
@@ -467,6 +503,25 @@
                 </div>
             </div>
         </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="page-section about">
+            <h2>Get in Touch</h2>
+            <div style="text-align: center; padding: 2rem;">
+                <p style="font-size: 1.2rem; margin-bottom: 2rem; color: #555;">
+                    I'd love to hear from you! Whether you have questions, suggestions, or just want to share your own eco-friendly journey, feel free to reach out.
+                </p>
+                <div style="font-size: 1.1rem; line-height: 2;">
+                    <p>📧 Email: <strong>emma@greenearthblog.com</strong></p>
+                    <p>🐦 Twitter: <strong>@EmmaGreenEarth</strong></p>
+                    <p>📸 Instagram: <strong>@green.earth.living</strong></p>
+                    <p>💼 LinkedIn: <strong>Emma Green</strong></p>
+                </div>
+                <p style="margin-top: 2rem; color: var(--light-green); font-size: 1.1rem;">
+                    Let's work together to create a greener future! 🌍💚
+                </p>
+            </div>
+        </section>
     </div>
 
     <footer>
@@ -476,5 +531,1641 @@
             Contact: emma@greenearthblog.com | Follow me on social media
         </p>
     </footer>
+
+    <script>
+        const articles = [
+            {
+                id: 1,
+                icon: '🌊',
+                title: 'Ocean Cleanup: Small Actions, Big Impact',
+                date: 'December 15, 2025',
+                excerpt: 'Discovered amazing ways to reduce ocean plastic during my beach cleanup last weekend. Every piece of trash we remove helps marine life thrive. Here\'s what I learned about organizing community beach cleanups...',
+                tags: ['Ocean', 'Community', 'Action'],
+                content: `
+                    <h1>🌊 Ocean Cleanup: Small Actions, Big Impact</h1>
+                    <div class="article-meta">Published on December 15, 2025 | 8 min read</div>
+
+                    <p>Last weekend, I participated in my 47th beach cleanup event, and it was one of the most rewarding experiences yet. As I walked along the sandy shores of Cannon Beach with 150 other volunteers, I couldn't help but reflect on how far we've come in our fight against ocean pollution.</p>
+
+                    <div class="article-image">
+                        <div class="article-image-placeholder">🏖️</div>
+                        <em>Our team collected over 300 pounds of debris in just 3 hours</em>
+                    </div>
+
+                    <h2>The Magnitude of the Problem</h2>
+                    <p>Did you know that approximately 8 million metric tons of plastic enter our oceans every year? That's equivalent to dumping one garbage truck of plastic into the ocean every single minute. The statistics are staggering, but they don't have to define our future.</p>
+
+                    <p>During our cleanup, we found everything from plastic bottles and straws to fishing nets and microplastics. Each item we collected was one less threat to sea turtles, dolphins, seabirds, and countless other marine species.</p>
+
+                    <h2>What I Learned About Organizing Beach Cleanups</h2>
+
+                    <h3>1. Planning is Everything</h3>
+                    <p>Successful beach cleanups don't happen by accident. Here's what goes into planning one:</p>
+                    <ul>
+                        <li><strong>Choose the right location:</strong> Research beaches that need the most help. Contact local environmental agencies for recommendations.</li>
+                        <li><strong>Get permits:</strong> Many beaches require permits for organized events. Apply 4-6 weeks in advance.</li>
+                        <li><strong>Partner with organizations:</strong> Connect with groups like Ocean Conservancy or Surfrider Foundation for support and resources.</li>
+                        <li><strong>Set a realistic date:</strong> Check tide schedules and weather forecasts. Low tide is ideal for maximum beach access.</li>
+                    </ul>
+
+                    <h3>2. Gather the Right Supplies</h3>
+                    <p>Every volunteer needs:</p>
+                    <ul>
+                        <li>Reusable gloves (we use biodegradable latex)</li>
+                        <li>Bucket or reusable bag for collecting debris</li>
+                        <li>Grabber tools for hard-to-reach items</li>
+                        <li>Safety vests for visibility</li>
+                        <li>First aid kit</li>
+                        <li>Data collection cards to track what you find</li>
+                    </ul>
+
+                    <h3>3. Make It Educational</h3>
+                    <p>Our cleanups aren't just about picking up trash—they're about raising awareness. We set up information stations where volunteers can learn about:</p>
+                    <ul>
+                        <li>The lifecycle of plastic in our oceans</li>
+                        <li>How their daily choices impact marine ecosystems</li>
+                        <li>Local wildlife affected by pollution</li>
+                        <li>Simple swaps to reduce plastic consumption</li>
+                    </ul>
+
+                    <blockquote>
+                        "The cure for anything is salt water: sweat, tears, or the sea." - Isak Dinesen<br><br>
+                        I'd add one more: the sweat from cleaning up our seas.
+                    </blockquote>
+
+                    <h2>The Ripple Effect of Small Actions</h2>
+                    <p>What started as a small group of 12 people three years ago has grown into a community movement. We now have monthly cleanups with over 150 regular volunteers. Together, we've removed more than 12,000 pounds of debris from our local beaches.</p>
+
+                    <p>But the impact goes beyond the numbers. I've watched participants change their daily habits—bringing reusable bags to grocery stores, refusing single-use plastics, and inspiring their friends and family to do the same.</p>
+
+                    <div class="article-image">
+                        <div class="article-image-placeholder">♻️</div>
+                        <em>Every piece matters - microplastics we collected during one cleanup</em>
+                    </div>
+
+                    <h2>The Most Common Items We Find</h2>
+                    <p>Based on our data from the past year:</p>
+                    <ol>
+                        <li><strong>Cigarette butts</strong> - 34% of all debris</li>
+                        <li><strong>Plastic bottles and caps</strong> - 21%</li>
+                        <li><strong>Food wrappers</strong> - 15%</li>
+                        <li><strong>Plastic bags</strong> - 12%</li>
+                        <li><strong>Straws and stirrers</strong> - 8%</li>
+                        <li><strong>Fishing gear</strong> - 6%</li>
+                        <li><strong>Other items</strong> - 4%</li>
+                    </ol>
+
+                    <h2>How You Can Get Involved</h2>
+                    <p>You don't need to wait for an organized event to make a difference. Here are ways you can start today:</p>
+
+                    <h3>Join or Start a Cleanup</h3>
+                    <p>Use apps like <strong>Clean Swell</strong> or <strong>Litterati</strong> to find local cleanups or organize your own. Even cleaning up with just your family makes an impact.</p>
+
+                    <h3>Practice Daily Prevention</h3>
+                    <ul>
+                        <li>Carry reusable bags, bottles, and utensils</li>
+                        <li>Choose products with minimal packaging</li>
+                        <li>Say no to single-use plastics</li>
+                        <li>Properly dispose of and recycle waste</li>
+                        <li>Support businesses committed to sustainability</li>
+                    </ul>
+
+                    <h3>Spread the Word</h3>
+                    <p>Share your cleanup experiences on social media. Education and awareness are powerful tools for change. When people see the reality of ocean pollution, they're more likely to take action.</p>
+
+                    <h2>A Message of Hope</h2>
+                    <p>It's easy to feel overwhelmed by the scale of ocean pollution. But every single piece of plastic we remove is a victory. Every person who changes their habits creates a ripple effect.</p>
+
+                    <p>Last weekend, a young girl named Sophie joined us for her first cleanup. She collected an entire bucket of bottle caps and asked her mom if they could stop buying bottled water. That's the power of hands-on experience. That's how movements begin.</p>
+
+                    <p>Our oceans have given us so much—they regulate our climate, produce over half of our oxygen, and provide sustenance for billions of people. The least we can do is return the favor by keeping them clean.</p>
+
+                    <blockquote>
+                        Remember: We don't inherit the Earth from our ancestors; we borrow it from our children. Let's make sure the oceans we pass on are thriving, not drowning in plastic.
+                    </blockquote>
+
+                    <p><strong>Join us for our next cleanup on January 12th at Cannon Beach, 9 AM. Bring your family, bring your friends, and let's make waves together! 🌊💙</strong></p>
+
+                    <div class="tags">
+                        <span class="tag">Ocean Cleanup</span>
+                        <span class="tag">Community Action</span>
+                        <span class="tag">Marine Conservation</span>
+                        <span class="tag">Plastic Pollution</span>
+                    </div>
+                `
+            },
+            {
+                id: 2,
+                icon: '🥗',
+                title: 'Zero Waste Kitchen Essentials',
+                date: 'December 10, 2025',
+                excerpt: 'Transforming my kitchen into a zero-waste zone has been incredibly rewarding. From reusable containers to composting scraps, these simple changes have reduced my household waste by 75%...',
+                tags: ['Zero Waste', 'Kitchen', 'Tips'],
+                content: `
+                    <h1>🥗 Zero Waste Kitchen Essentials</h1>
+                    <div class="article-meta">Published on December 10, 2025 | 12 min read</div>
+
+                    <p>Two years ago, my kitchen produced three large bags of trash every week. Today? Less than half a small bag. This transformation didn't happen overnight, and it didn't require perfection—just consistent, mindful choices.</p>
+
+                    <p>If you're ready to reduce your kitchen waste dramatically, this comprehensive guide will walk you through every step. I'll share the tools, techniques, and mindset shifts that helped me achieve a 75% reduction in household waste.</p>
+
+                    <h2>Why Focus on the Kitchen?</h2>
+                    <p>The kitchen is ground zero for household waste. According to the EPA, food and food packaging account for nearly 45% of the materials sent to landfills from our homes. That's a staggering amount—and a massive opportunity for change.</p>
+
+                    <div class="article-image">
+                        <div class="article-image-placeholder">🗑️</div>
+                        <em>My trash production before and after going zero waste</em>
+                    </div>
+
+                    <h2>The Essential Tools</h2>
+                    <p>You don't need to buy everything at once. I built my zero-waste kitchen gradually over six months. Here are the game-changers:</p>
+
+                    <h3>Storage Solutions</h3>
+                    <ul>
+                        <li><strong>Glass containers with airtight lids</strong> - I use mason jars for everything from dry goods to leftovers. They're durable, transparent (so you can see what's inside), and completely plastic-free.</li>
+                        <li><strong>Beeswax wraps</strong> - These reusable wraps replace plastic wrap and aluminum foil. They're perfect for covering bowls and wrapping sandwiches.</li>
+                        <li><strong>Silicone storage bags</strong> - For items that need to be frozen or marinated, these washable bags are lifesavers.</li>
+                        <li><strong>Cloth produce bags</strong> - I keep a set in my car so I never forget them for grocery shopping.</li>
+                    </ul>
+
+                    <h3>Shopping and Prep</h3>
+                    <ul>
+                        <li><strong>Reusable shopping bags</strong> - I have three types: sturdy totes for heavy items, mesh bags for produce, and insulated bags for frozen goods.</li>
+                        <li><strong>Glass bottles</strong> - For bulk liquids like oil, vinegar, and milk (from local dairies that do bottle returns).</li>
+                        <li><strong>Compost bin</strong> - A countertop compost container with a charcoal filter keeps smells at bay.</li>
+                        <li><strong>Cloth napkins and towels</strong> - I haven't bought paper towels in 18 months.</li>
+                    </ul>
+
+                    <h2>The Shopping Strategy</h2>
+                    <p>How you shop determines how much waste you generate. Here's my approach:</p>
+
+                    <h3>1. Shop in Bulk</h3>
+                    <p>Bulk bins are a zero-waste kitchen's best friend. I buy grains, nuts, dried fruits, pasta, spices, and even dish soap in bulk. My routine:</p>
+                    <ul>
+                        <li>Weigh my empty containers at customer service (they'll write the tare weight on the lid)</li>
+                        <li>Fill containers directly from bulk bins</li>
+                        <li>At checkout, the tare weight is subtracted, so I only pay for the food</li>
+                    </ul>
+
+                    <h3>2. Choose Package-Free Produce</h3>
+                    <p>I skip pre-packaged fruits and vegetables entirely. Instead:</p>
+                    <ul>
+                        <li>I select loose produce and use my cloth bags</li>
+                        <li>I shop at farmers markets where packaging is minimal</li>
+                        <li>I write PLU codes directly on my bags with a marker</li>
+                    </ul>
+
+                    <h3>3. Find Local Sources</h3>
+                    <p>Building relationships with local producers has been transformative:</p>
+                    <ul>
+                        <li><strong>Baker:</strong> Brings fresh bread in my own bag</li>
+                        <li><strong>Butcher:</strong> Wraps meat in paper or my containers</li>
+                        <li><strong>Dairy:</strong> Offers milk in returnable glass bottles</li>
+                        <li><strong>Cheese shop:</strong> Cuts cheese to order, wrapped in paper</li>
+                    </ul>
+
+                    <blockquote>
+                        "The zero-waste lifestyle isn't about perfection. It's about making better choices, one meal at a time."
+                    </blockquote>
+
+                    <h2>Composting Made Simple</h2>
+                    <p>Food scraps make up about 30% of household waste. Composting keeps this valuable resource out of landfills and creates nutrient-rich soil for gardens.</p>
+
+                    <h3>What I Compost</h3>
+                    <ul>
+                        <li>Fruit and vegetable scraps</li>
+                        <li>Coffee grounds and tea bags (make sure they're plastic-free!)</li>
+                        <li>Eggshells</li>
+                        <li>Nutshells</li>
+                        <li>Paper napkins and towels (if not bleached)</li>
+                        <li>Cardboard egg cartons (torn into pieces)</li>
+                    </ul>
+
+                    <h3>My Composting Setup</h3>
+                    <p>I use a three-bin system in my backyard:</p>
+                    <ol>
+                        <li><strong>Active bin:</strong> Where fresh scraps go</li>
+                        <li><strong>Decomposing bin:</strong> Material that's breaking down (turned weekly)</li>
+                        <li><strong>Finished bin:</strong> Ready-to-use compost for my garden</li>
+                    </ol>
+
+                    <p>Don't have outdoor space? No problem! I started with a small worm bin under my sink. Many cities also offer curbside compost pickup.</p>
+
+                    <div class="article-image">
+                        <div class="article-image-placeholder">🌱</div>
+                        <em>My backyard compost system transformed kitchen waste into garden gold</em>
+                    </div>
+
+                    <h2>Meal Planning for Less Waste</h2>
+                    <p>Poor planning is the enemy of zero waste. Here's my weekly routine:</p>
+
+                    <h3>Sunday Planning Session</h3>
+                    <ol>
+                        <li><strong>Inventory check:</strong> I look through my fridge, freezer, and pantry to see what needs to be used</li>
+                        <li><strong>Menu creation:</strong> I plan 5-6 dinners based on what I have and what's in season</li>
+                        <li><strong>Shopping list:</strong> I write down only what I need, organized by store section</li>
+                        <li><strong>Prep work:</strong> I wash and chop vegetables, cook grains, and prep ingredients for the week</li>
+                    </ol>
+
+                    <h3>Using Every Bit</h3>
+                    <p>I've learned to waste nothing:</p>
+                    <ul>
+                        <li><strong>Vegetable scraps:</strong> Make stock (then compost the solids)</li>
+                        <li><strong>Stale bread:</strong> Turn into croutons, breadcrumbs, or bread pudding</li>
+                        <li><strong>Herb stems:</strong> Add to stock or pesto</li>
+                        <li><strong>Citrus peels:</strong> Make cleaner or candied peel</li>
+                        <li><strong>Overripe fruit:</strong> Smoothies, baked goods, or jam</li>
+                    </ul>
+
+                    <h2>Cleaning Without Waste</h2>
+                    <p>Commercial cleaning products come in plastic bottles and contain harsh chemicals. My zero-waste alternatives:</p>
+
+                    <h3>DIY All-Purpose Cleaner</h3>
+                    <p>In a spray bottle, combine:</p>
+                    <ul>
+                        <li>1 part white vinegar</li>
+                        <li>1 part water</li>
+                        <li>10 drops essential oil (lemon or tea tree)</li>
+                    </ul>
+
+                    <h3>My Cleaning Kit</h3>
+                    <ul>
+                        <li><strong>Cloth towels:</strong> Cut from old t-shirts</li>
+                        <li><strong>Swedish dishcloths:</strong> Compostable and last for months</li>
+                        <li><strong>Wooden brush:</strong> For scrubbing dishes</li>
+                        <li><strong>Castile soap:</strong> Bought in bulk, works for dishes and surfaces</li>
+                        <li><strong>Baking soda:</strong> The ultimate gentle scrubber</li>
+                    </ul>
+
+                    <h2>The Results After Two Years</h2>
+                    <p>The numbers speak for themselves:</p>
+                    <ul>
+                        <li><strong>Waste reduction:</strong> From 3 bags weekly to 0.5 bags (75% decrease)</li>
+                        <li><strong>Money saved:</strong> $2,400 annually (less packaging means better prices, and I waste less food)</li>
+                        <li><strong>Compost created:</strong> Over 400 pounds of nutrient-rich soil</li>
+                        <li><strong>Plastic avoided:</strong> An estimated 2,500 pieces of single-use plastic</li>
+                    </ul>
+
+                    <h2>Starting Your Journey</h2>
+                    <p>Don't try to do everything at once. Here's a realistic 90-day plan:</p>
+
+                    <h3>Month 1: Assess and Swap</h3>
+                    <ul>
+                        <li>Audit your trash for one week—what are you throwing away most?</li>
+                        <li>Make 3 simple swaps (e.g., cloth napkins, reusable bags, glass containers)</li>
+                        <li>Start composting</li>
+                    </ul>
+
+                    <h3>Month 2: Change Shopping Habits</h3>
+                    <ul>
+                        <li>Find stores with bulk bins</li>
+                        <li>Visit a farmers market</li>
+                        <li>Start meal planning</li>
+                        <li>Make your first DIY cleaner</li>
+                    </ul>
+
+                    <h3>Month 3: Refine and Expand</h3>
+                    <ul>
+                        <li>Identify remaining waste sources</li>
+                        <li>Find creative solutions for problem items</li>
+                        <li>Share your journey with friends and family</li>
+                    </ul>
+
+                    <blockquote>
+                        "We can't all do everything, but we can all do something. Your zero-waste kitchen doesn't have to be perfect—it just has to be better than yesterday."
+                    </blockquote>
+
+                    <h2>Common Challenges and Solutions</h2>
+
+                    <h3>"Bulk shopping isn't available near me"</h3>
+                    <p>Look for online retailers that ship in minimal packaging, buy larger sizes to reduce packaging frequency, or start a bulk-buying co-op with neighbors.</p>
+
+                    <h3>"I don't have time for meal planning"</h3>
+                    <p>Start with just planning 3 dinners weekly. Use simple recipes with overlapping ingredients. Batch cook on weekends.</p>
+
+                    <h3>"My family isn't on board"</h3>
+                    <p>Lead by example. Make it easy for them—keep reusable bags in the car, make zero-waste options the convenient choice. Share interesting facts about waste impact.</p>
+
+                    <p>Remember, every jar filled from bulk bins, every meal planned, every scrap composted is a small victory. Together, these small victories create massive change.</p>
+
+                    <p><strong>What was your first zero-waste swap? Share in the comments—I'd love to hear your stories! 🌿</strong></p>
+
+                    <div class="tags">
+                        <span class="tag">Zero Waste</span>
+                        <span class="tag">Kitchen Tips</span>
+                        <span class="tag">Sustainable Living</span>
+                        <span class="tag">Composting</span>
+                    </div>
+                `
+            },
+            {
+                id: 3,
+                icon: '🚴',
+                title: 'Sustainable Transportation Guide',
+                date: 'December 5, 2025',
+                excerpt: 'Switching to cycling for my daily commute has changed my life! Not only am I reducing carbon emissions, but I\'m also healthier and happier. Here\'s my complete guide to eco-friendly transportation...',
+                tags: ['Transport', 'Health', 'Carbon'],
+                content: `
+                    <h1>🚴 Sustainable Transportation Guide</h1>
+                    <div class="article-meta">Published on December 5, 2025 | 10 min read</div>
+
+                    <p>Fourteen months ago, I made a decision that transformed my daily life: I sold my car and committed to sustainable transportation. Today, I bike to work rain or shine, take public transit for longer trips, and occasionally use car-sharing services when absolutely necessary.</p>
+
+                    <p>The results? I've saved over $8,000, lost 15 pounds, reduced my carbon footprint by 4.6 tons of CO2, and I've never been happier or healthier. Let me show you how you can make the shift too.</p>
+
+                    <div class="article-image">
+                        <div class="article-image-placeholder">🚲</div>
+                        <em>My trusty bike that's taken me over 3,500 miles this year</em>
+                    </div>
+
+                    <h2>The Environmental Case</h2>
+                    <p>Transportation is the largest source of greenhouse gas emissions in the United States, accounting for 29% of total emissions. The average passenger vehicle emits about 4.6 metric tons of carbon dioxide per year.</p>
+
+                    <p>By choosing sustainable alternatives, we can make a massive collective impact. If just 10% of Americans replaced one car trip per day with a bike ride, we'd save 1.5 billion gallons of gas annually.</p>
+
+                    <h2>My Transportation Toolkit</h2>
+
+                    <h3>The Bicycle: My Primary Vehicle</h3>
+                    <p>I use my bike for 80% of my trips under 5 miles. Here's what makes it work:</p>
+
+                    <ul>
+                        <li><strong>A reliable commuter bike:</strong> I invested in a quality hybrid bike with fenders, lights, and a rack. Cost: $800 upfront, but it's paid for itself many times over.</li>
+                        <li><strong>Weather gear:</strong> A good rain jacket and waterproof panniers mean weather is never an excuse.</li>
+                        <li><strong>Safety equipment:</strong> Helmet, front and rear lights, reflective vest, and a bell.</li>
+                        <li><strong>Maintenance kit:</strong> Basic tools, spare tube, pump, and chain lube.</li>
+                    </ul>
+
+                    <h3>Public Transportation</h3>
+                    <p>For trips beyond biking distance, I use a combination of:</p>
+                    <ul>
+                        <li><strong>Bus:</strong> My city's bus system is extensive and reliable</li>
+                        <li><strong>Light rail:</strong> Perfect for getting downtown quickly</li>
+                        <li><strong>Monthly pass:</strong> Unlimited rides for $100/month (compared to $400/month I spent on car expenses)</li>
+                    </ul>
+
+                    <h3>The Backup Options</h3>
+                    <ul>
+                        <li><strong>Car-sharing:</strong> For occasional large purchases or bad weather days</li>
+                        <li><strong>Bike-sharing:</strong> When I need a one-way trip</li>
+                        <li><strong>Electric scooters:</strong> For quick errands</li>
+                    </ul>
+
+                    <h2>A Day in My Car-Free Life</h2>
+
+                    <h3>Morning (7:00 AM)</h3>
+                    <p>I wake up and check the weather. Light rain today—perfect cycling weather with the right gear. I pack my work clothes in my waterproof pannier, put on my rain jacket, and hit the road.</p>
+
+                    <p>My 6-mile commute takes 25 minutes, just 5 minutes longer than driving—but without traffic stress, parking hassles, or gas costs. I arrive energized, having already gotten my morning exercise.</p>
+
+                    <h3>Midday (12:30 PM)</h3>
+                    <p>Lunch meeting across town. I take the light rail, using the 15-minute ride to catch up on emails. No circling for parking, no traffic—just efficient, stress-free travel.</p>
+
+                    <h3>Evening (6:00 PM)</h3>
+                    <p>Grocery shopping on the way home. My bike's rear rack and panniers hold a week's worth of groceries. I've learned to shop smarter—buying what I can carry encourages me to buy fresh, shop more frequently, and waste less food.</p>
+
+                    <div class="article-image">
+                        <div class="article-image-placeholder">🛤️</div>
+                        <em>The beautiful bike path that's part of my daily commute</em>
+                    </div>
+
+                    <h2>The Health Benefits</h2>
+                    <p>Switching to active transportation was the best health decision I've made:</p>
+
+                    <ul>
+                        <li><strong>Physical fitness:</strong> I average 12 miles of cycling daily, burning 600-800 calories</li>
+                        <li><strong>Mental health:</strong> The outdoor exercise reduces stress and improves my mood</li>
+                        <li><strong>Better sleep:</strong> The physical activity helps me sleep more soundly</li>
+                        <li><strong>Improved cardiovascular health:</strong> My resting heart rate dropped from 72 to 58 bpm</li>
+                        <li><strong>Weight loss:</strong> I lost 15 pounds in the first 6 months without changing my diet</li>
+                    </ul>
+
+                    <blockquote>
+                        "Every time I choose my bike over a car, I'm not just reducing emissions—I'm investing in my health, my community, and my future."
+                    </blockquote>
+
+                    <h2>The Financial Breakdown</h2>
+
+                    <h3>What I Spent on Car Ownership (Annual)</h3>
+                    <ul>
+                        <li>Car payment: $3,600</li>
+                        <li>Insurance: $1,200</li>
+                        <li>Gas: $2,100</li>
+                        <li>Maintenance: $800</li>
+                        <li>Parking: $600</li>
+                        <li><strong>Total: $8,300</strong></li>
+                    </ul>
+
+                    <h3>What I Spend Now (Annual)</h3>
+                    <ul>
+                        <li>Public transit pass: $1,200</li>
+                        <li>Bike maintenance: $200</li>
+                        <li>Car-sharing (occasional): $300</li>
+                        <li>Bike accessories: $100</li>
+                        <li><strong>Total: $1,800</strong></li>
+                    </ul>
+
+                    <p><strong>Annual savings: $6,500</strong></p>
+
+                    <p>That's money I've redirected toward an emergency fund, travel, and supporting local sustainable businesses.</p>
+
+                    <h2>Making the Transition</h2>
+                    <p>You don't have to sell your car tomorrow. Here's a realistic transition plan:</p>
+
+                    <h3>Phase 1: Explore (Month 1-2)</h3>
+                    <ul>
+                        <li>Map your regular routes and identify bikeable distances</li>
+                        <li>Research public transit options</li>
+                        <li>Try bike-sharing or rent a bike for a week</li>
+                        <li>Calculate your current transportation costs</li>
+                    </ul>
+
+                    <h3>Phase 2: Experiment (Month 3-4)</h3>
+                    <ul>
+                        <li>Replace one car trip per week with biking or transit</li>
+                        <li>Invest in basic cycling gear</li>
+                        <li>Try different routes to find the safest, most enjoyable paths</li>
+                        <li>Track your progress and savings</li>
+                    </ul>
+
+                    <h3>Phase 3: Commit (Month 5-6)</h3>
+                    <ul>
+                        <li>Increase to 3-4 car-free days per week</li>
+                        <li>Consider selling a second car (if you have one)</li>
+                        <li>Invest in quality gear that makes cycling comfortable</li>
+                        <li>Build a support network of fellow bike commuters</li>
+                    </ul>
+
+                    <h3>Phase 4: Thrive (Month 7+)</h3>
+                    <ul>
+                        <li>Make sustainable transport your default choice</li>
+                        <li>Advocate for better bike infrastructure in your community</li>
+                        <li>Inspire others by sharing your experience</li>
+                    </ul>
+
+                    <h2>Overcoming Common Obstacles</h2>
+
+                    <h3>"But I live too far from work"</h3>
+                    <p>Consider:</p>
+                    <ul>
+                        <li>Bike + transit combination (many buses have bike racks)</li>
+                        <li>Electric bikes that extend your comfortable range</li>
+                        <li>Carpooling with coworkers for part of the distance</li>
+                        <li>Working from home 1-2 days per week</li>
+                    </ul>
+
+                    <h3>"What about bad weather?"</h3>
+                    <p>I bike in rain, snow, and cold. The secret:</p>
+                    <ul>
+                        <li>Layer properly—you'll warm up once you start riding</li>
+                        <li>Invest in good waterproof gear</li>
+                        <li>Use winter tires with good traction</li>
+                        <li>Have backup options for extreme weather days</li>
+                    </ul>
+
+                    <h3>"I need to transport my kids"</h3>
+                    <p>Many families successfully bike with children using:</p>
+                    <ul>
+                        <li>Cargo bikes with passenger seats</li>
+                        <li>Bike trailers for younger kids</li>
+                        <li>Tag-along bikes for older children</li>
+                        <li>Teaching kids to ride their own bikes</li>
+                    </ul>
+
+                    <h3>"Isn't it dangerous?"</h3>
+                    <p>Safety is about smart choices:</p>
+                    <ul>
+                        <li>Choose routes with bike lanes or low traffic</li>
+                        <li>Use proper lights and reflective gear</li>
+                        <li>Follow traffic laws consistently</li>
+                        <li>Take a cycling safety course</li>
+                        <li>Ride confidently and predictably</li>
+                    </ul>
+
+                    <div class="article-image">
+                        <div class="article-image-placeholder">🌍</div>
+                        <em>My carbon footprint reduction over 14 months</em>
+                    </div>
+
+                    <h2>The Unexpected Benefits</h2>
+                    <p>Beyond the obvious environmental and health perks, going car-free has enriched my life in surprising ways:</p>
+
+                    <ul>
+                        <li><strong>Community connection:</strong> I see my neighbors, wave to familiar faces, and feel more connected to my city</li>
+                        <li><strong>Mindfulness:</strong> Cycling forces me to be present, observing my surroundings instead of zoning out</li>
+                        <li><strong>Simplicity:</strong> Owning less stuff (no car clutter) brings mental clarity</li>
+                        <li><strong>Confidence:</strong> Navigating weather and distance builds resilience</li>
+                        <li><strong>Joy:</strong> There's pure pleasure in pedaling through my city under my own power</li>
+                    </ul>
+
+                    <h2>Creating Change Beyond Individual Action</h2>
+                    <p>Personal choices matter, but systemic change is crucial. Here's how I advocate:</p>
+
+                    <ul>
+                        <li>Attending city council meetings about bike infrastructure</li>
+                        <li>Joining local cycling advocacy groups</li>
+                        <li>Supporting political candidates who prioritize sustainable transit</li>
+                        <li>Writing to local representatives about bike lane expansion</li>
+                        <li>Participating in community rides that demonstrate demand for better infrastructure</li>
+                    </ul>
+
+                    <blockquote>
+                        "Cities aren't made for cars or bikes—they're made by choices. Every bike ride is a vote for the kind of city you want to live in."
+                    </blockquote>
+
+                    <h2>Your Next Steps</h2>
+                    <p>Ready to start your sustainable transportation journey? Here's what to do this week:</p>
+
+                    <ol>
+                        <li>Calculate your current transportation costs (be honest about every expense)</li>
+                        <li>Map one regular trip you could make by bike or transit</li>
+                        <li>Try that alternative route this week</li>
+                        <li>Research local bike shops and find one with good service</li>
+                        <li>Connect with one local cyclist or join an online community</li>
+                    </ol>
+
+                    <p>Remember, this isn't about perfection. I still use car-sharing about twice a month for furniture shopping or visiting friends in the suburbs. The goal isn't to never use a car—it's to make sustainable transportation your default choice.</p>
+
+                    <p>Fourteen months in, I can't imagine going back. The freedom, health, savings, and environmental benefits have exceeded every expectation. My only regret? Not doing this sooner.</p>
+
+                    <p><strong>Have you tried bike commuting? What questions do you have about making the switch? Let's talk in the comments! 🚴💚</strong></p>
+
+                    <div class="tags">
+                        <span class="tag">Bike Commuting</span>
+                        <span class="tag">Sustainable Transport</span>
+                        <span class="tag">Carbon Reduction</span>
+                        <span class="tag">Health & Fitness</span>
+                    </div>
+                `
+            },
+            {
+                id: 4,
+                icon: '🌿',
+                title: 'Urban Gardening for Beginners',
+                date: 'November 28, 2025',
+                excerpt: 'You don\'t need a big backyard to grow your own food! My balcony garden now produces fresh herbs, tomatoes, and peppers. Learn how to start your own urban garden with limited space...',
+                tags: ['Gardening', 'Urban', 'Food'],
+                content: `
+                    <h1>🌿 Urban Gardening for Beginners</h1>
+                    <div class="article-meta">Published on November 28, 2025 | 11 min read</div>
+
+                    <p>When I moved into my city apartment three years ago, I didn't think I could grow food without a yard. Today, my 120-square-foot balcony produces enough vegetables and herbs to supply 40% of my fresh produce needs from May through October.</p>
+
+                    <p>Urban gardening isn't just possible—it's incredibly rewarding, surprisingly productive, and one of the most impactful things you can do for the environment and your health.</p>
+
+                    <div class="article-image">
+                        <div class="article-image-placeholder">🏙️</div>
+                        <em>My balcony garden at peak summer production</em>
+                    </div>
+
+                    <h2>Why Urban Gardening Matters</h2>
+                    <p>Growing your own food, even in small quantities, creates ripple effects:</p>
+                    <ul>
+                        <li><strong>Reduces food miles:</strong> The average American meal travels 1,500 miles from farm to plate</li>
+                        <li><strong>Eliminates packaging:</strong> No plastic clamshells or styrofoam trays</li>
+                        <li><strong>Ensures freshness:</strong> Harvest-to-table in minutes, not days</li>
+                        <li><strong>Builds food security:</strong> Less dependence on supply chains</li>
+                        <li><strong>Supports pollinators:</strong> Creates habitat in urban areas</li>
+                        <li><strong>Improves mental health:</strong> Gardening reduces stress and anxiety</li>
+                    </ul>
+
+                    <h2>Assessing Your Space</h2>
+
+                    <h3>Sunlight Analysis</h3>
+                    <p>This is the most important factor. Spend a sunny day observing your space:</p>
+                    <ul>
+                        <li><strong>Full sun (6+ hours):</strong> Perfect for tomatoes, peppers, cucumbers, most vegetables</li>
+                        <li><strong>Partial sun (4-6 hours):</strong> Great for herbs, lettuce, spinach, root vegetables</li>
+                        <li><strong>Shade (2-4 hours):</strong> Try lettuce, arugula, mint, parsley</li>
+                    </ul>
+
+                    <p>My balcony gets 7 hours of sun, facing southwest. I've marked where shadows fall throughout the day and positioned plants accordingly.</p>
+
+                    <h3>Space Inventory</h3>
+                    <p>What can you use?</p>
+                    <ul>
+                        <li>Balconies and patios</li>
+                        <li>Fire escapes (check local regulations)</li>
+                        <li>Windowsills and window boxes</li>
+                        <li>Rooftop access</li>
+                        <li>Shared courtyard spaces</li>
+                        <li>Indoor spaces near windows</li>
+                    </ul>
+
+                    <h2>Essential Supplies</h2>
+                    <p>You don't need much to start. Here's my essential kit:</p>
+
+                    <h3>Containers</h3>
+                    <ul>
+                        <li><strong>5-gallon buckets:</strong> Perfect for tomatoes, peppers (drill drainage holes in the bottom)</li>
+                        <li><strong>Window boxes:</strong> Ideal for herbs and lettuce</li>
+                        <li><strong>Fabric grow bags:</strong> Breathable, portable, space-efficient</li>
+                        <li><strong>Recycled containers:</strong> I've used everything from yogurt containers to old laundry baskets</li>
+                    </ul>
+
+                    <p><strong>Key rule:</strong> Every container needs drainage holes. Standing water kills roots.</p>
+
+                    <h3>Soil</h3>
+                    <p>Don't use garden soil in containers—it's too heavy. I mix:</p>
+                    <ul>
+                        <li>60% potting mix</li>
+                        <li>30% compost</li>
+                        <li>10% perlite or vermiculite (for drainage)</li>
+                    </ul>
+
+                    <h3>Tools</h3>
+                    <ul>
+                        <li>Hand trowel</li>
+                        <li>Watering can or hose attachment</li>
+                        <li>Pruning shears</li>
+                        <li>Moisture meter (optional but helpful)</li>
+                    </ul>
+
+                    <h2>Best Plants for Urban Gardens</h2>
+
+                    <h3>Start with These (Beginner-Friendly)</h3>
+
+                    <h4>Herbs</h4>
+                    <p>The easiest and most rewarding category:</p>
+                    <ul>
+                        <li><strong>Basil:</strong> Loves heat and sun, prolific producer</li>
+                        <li><strong>Mint:</strong> Grows like crazy (keep it contained!)</li>
+                        <li><strong>Parsley:</strong> Tolerates partial shade, long harvest period</li>
+                        <li><strong>Cilantro:</strong> Quick to mature, succession plant every 2 weeks</li>
+                        <li><strong>Chives:</strong> Perennial, comes back year after year</li>
+                    </ul>
+
+                    <h4>Greens</h4>
+                    <ul>
+                        <li><strong>Lettuce:</strong> Grows fast, perfect for small spaces</li>
+                        <li><strong>Arugula:</strong> Peppery flavor, ready in 3 weeks</li>
+                        <li><strong>Spinach:</strong> Nutrient-dense, cool-season crop</li>
+                        <li><strong>Kale:</strong> Hardy, productive, handles cold well</li>
+                    </ul>
+
+                    <h4>Vegetables</h4>
+                    <ul>
+                        <li><strong>Cherry tomatoes:</strong> More productive than large varieties in containers</li>
+                        <li><strong>Peppers:</strong> Compact plants, high yields</li>
+                        <li><strong>Radishes:</strong> Ready in just 25 days</li>
+                        <li><strong>Green beans:</strong> Vertical growth saves space</li>
+                    </ul>
+
+                    <div class="article-image">
+                        <div class="article-image-placeholder">🍅</div>
+                        <em>One tomato plant produced 47 tomatoes last season</em>
+                    </div>
+
+                    <h2>My Growing Calendar</h2>
+
+                    <h3>Spring (March-May)</h3>
+                    <ul>
+                        <li>Start cool-season crops: lettuce, spinach, peas, radishes</li>
+                        <li>Start herb seeds indoors</li>
+                        <li>Prepare containers with fresh soil</li>
+                    </ul>
+
+                    <h3>Summer (June-August)</h3>
+                    <ul>
+                        <li>Plant warm-season crops: tomatoes, peppers, cucumbers, beans</li>
+                        <li>Harvest continuously</li>
+                        <li>Water daily (sometimes twice in heat waves)</li>
+                    </ul>
+
+                    <h3>Fall (September-November)</h3>
+                    <ul>
+                        <li>Plant second round of cool-season crops</li>
+                        <li>Harvest remaining warm-season vegetables before frost</li>
+                        <li>Save seeds for next year</li>
+                    </ul>
+
+                    <h3>Winter (December-February)</h3>
+                    <ul>
+                        <li>Grow herbs indoors on windowsills</li>
+                        <li>Plan next season's garden</li>
+                        <li>Compost and prepare soil</li>
+                    </ul>
+
+                    <h2>The Watering Strategy</h2>
+                    <p>Container plants dry out faster than ground gardens. Here's what I've learned:</p>
+
+                    <h3>When to Water</h3>
+                    <ul>
+                        <li>Check soil moisture daily—stick your finger 1-2 inches deep</li>
+                        <li>Water when the top inch is dry</li>
+                        <li>Morning is best (reduces disease, ensures water availability during hot days)</li>
+                        <li>In peak summer, I water twice daily</li>
+                    </ul>
+
+                    <h3>How to Water</h3>
+                    <ul>
+                        <li>Water deeply until it drains from bottom holes</li>
+                        <li>Water soil, not leaves (prevents disease)</li>
+                        <li>Use a gentle shower setting, not a harsh stream</li>
+                    </ul>
+
+                    <h3>Water Conservation Tips</h3>
+                    <ul>
+                        <li>Mulch containers with straw or wood chips (reduces evaporation)</li>
+                        <li>Group containers to create humid microclimates</li>
+                        <li>Collect water in buckets when it rains</li>
+                        <li>Reuse pasta cooking water (after it cools)</li>
+                    </ul>
+
+                    <h2>Feeding Your Plants</h2>
+                    <p>Container soil depletes nutrients faster than ground soil. My feeding schedule:</p>
+
+                    <h3>Compost Tea</h3>
+                    <p>My favorite organic fertilizer. I make it weekly:</p>
+                    <ol>
+                        <li>Fill a 5-gallon bucket with water</li>
+                        <li>Add 2 cups of finished compost in a mesh bag</li>
+                        <li>Let steep for 24-48 hours</li>
+                        <li>Dilute 1:4 with water</li>
+                        <li>Apply to soil around plants</li>
+                    </ol>
+
+                    <h3>Alternative Fertilizers</h3>
+                    <ul>
+                        <li><strong>Fish emulsion:</strong> High nitrogen, great for leafy greens</li>
+                        <li><strong>Worm castings:</strong> Gentle, all-purpose nutrient source</li>
+                        <li><strong>Banana peels:</strong> Bury in soil for potassium</li>
+                        <li><strong>Eggshells:</strong> Crushed and mixed into soil for calcium</li>
+                    </ul>
+
+                    <h2>Vertical Growing Techniques</h2>
+                    <p>Maximize small spaces by growing up, not out:</p>
+
+                    <h3>Trellises</h3>
+                    <p>I use bamboo stakes and twine for:</p>
+                    <ul>
+                        <li>Cherry tomatoes</li>
+                        <li>Pole beans</li>
+                        <li>Cucumbers</li>
+                        <li>Peas</li>
+                    </ul>
+
+                    <h3>Hanging Baskets</h3>
+                    <p>Perfect for:</p>
+                    <ul>
+                        <li>Strawberries</li>
+                        <li>Trailing herbs like oregano and thyme</li>
+                        <li>Small-fruited tomatoes</li>
+                    </ul>
+
+                    <h3>Wall-Mounted Systems</h3>
+                    <p>I installed a simple vertical garden using:</p>
+                    <ul>
+                        <li>Rain gutter planters mounted to the wall</li>
+                        <li>Perfect for shallow-rooted herbs and greens</li>
+                        <li>Saves 60% of my floor space</li>
+                    </ul>
+
+                    <blockquote>
+                        "The best time to plant a garden was 10 years ago. The second best time is today."
+                    </blockquote>
+
+                    <h2>Common Problems and Solutions</h2>
+
+                    <h3>Pests</h3>
+                    <ul>
+                        <li><strong>Aphids:</strong> Spray with soapy water or introduce ladybugs</li>
+                        <li><strong>Whiteflies:</strong> Yellow sticky traps work well</li>
+                        <li><strong>Caterpillars:</strong> Hand-pick or use BT (organic bacteria)</li>
+                    </ul>
+
+                    <h3>Diseases</h3>
+                    <ul>
+                        <li><strong>Powdery mildew:</strong> Improve air circulation, water at soil level</li>
+                        <li><strong>Blossom end rot:</strong> Ensure consistent watering, add calcium</li>
+                        <li><strong>Damping off:</strong> Don't overwater seedlings, use sterile starting mix</li>
+                    </ul>
+
+                    <h3>Environmental Stress</h3>
+                    <ul>
+                        <li><strong>Heat stress:</strong> Provide afternoon shade, water more frequently</li>
+                        <li><strong>Wind damage:</strong> Use stakes, move containers to protected areas</li>
+                        <li><strong>Frost:</strong> Cover with blankets, move tender plants indoors</li>
+                    </ul>
+
+                    <h2>My Harvest Results (Last Season)</h2>
+                    <p>From my 120 sq ft balcony:</p>
+                    <ul>
+                        <li>Tomatoes: 94 cherry tomatoes, 12 large slicers</li>
+                        <li>Peppers: 23 bell peppers, 47 hot peppers</li>
+                        <li>Herbs: Continuous harvest from May-October (estimated $300 retail value)</li>
+                        <li>Lettuce: 42 heads over succession plantings</li>
+                        <li>Cucumbers: 18 cucumbers</li>
+                        <li>Beans: 4 pounds</li>
+                    </ul>
+
+                    <p><strong>Total estimated value: $650 of organic produce from $120 in supplies.</strong></p>
+
+                    <div class="article-image">
+                        <div class="article-image-placeholder">🥬</div>
+                        <em>Week's harvest from my compact balcony garden</em>
+                    </div>
+
+                    <h2>Getting Started This Week</h2>
+                    <p>Here's your actionable plan:</p>
+
+                    <h3>Day 1-2: Assess and Plan</h3>
+                    <ul>
+                        <li>Observe sunlight patterns in your space</li>
+                        <li>Measure your available area</li>
+                        <li>Research what grows well in your climate zone</li>
+                    </ul>
+
+                    <h3>Day 3-4: Gather Supplies</h3>
+                    <ul>
+                        <li>Buy or find 2-3 containers</li>
+                        <li>Get potting mix and compost</li>
+                        <li>Choose 3 beginner-friendly plants</li>
+                    </ul>
+
+                    <h3>Day 5-7: Plant and Learn</h3>
+                    <ul>
+                        <li>Fill containers with soil mix</li>
+                        <li>Plant your first seeds or seedlings</li>
+                        <li>Set up a simple watering schedule</li>
+                        <li>Take photos to document your progress</li>
+                    </ul>
+
+                    <h2>Join the Urban Farming Movement</h2>
+                    <p>You're not alone in this journey. Connect with:</p>
+                    <ul>
+                        <li>Local community gardens</li>
+                        <li>Urban farming Facebook groups</li>
+                        <li>Seed exchange programs</li>
+                        <li>Neighborhood garden tours</li>
+                    </ul>
+
+                    <p>Three years ago, I didn't know the difference between a tomato seedling and a weed. Today, I'm growing a significant portion of my own food in a tiny urban space. If I can do it, you absolutely can too.</p>
+
+                    <p>The first tomato you grow yourself will be the best tomato you've ever tasted—not because it's objectively perfect, but because you grew it. That sense of accomplishment, connection to your food, and tangible environmental impact is absolutely priceless.</p>
+
+                    <p><strong>What will you plant first? Share your urban garden plans in the comments! 🌱</strong></p>
+
+                    <div class="tags">
+                        <span class="tag">Urban Gardening</span>
+                        <span class="tag">Container Growing</span>
+                        <span class="tag">Food Security</span>
+                        <span class="tag">Sustainable Food</span>
+                    </div>
+                `
+            },
+            {
+                id: 5,
+                icon: '☀️',
+                title: 'Renewable Energy at Home',
+                date: 'November 20, 2025',
+                excerpt: 'Installing solar panels was one of the best decisions I\'ve made! My electricity bills are down 80%, and I\'m powering my home with clean energy. Here\'s everything you need to know about going solar...',
+                tags: ['Solar', 'Energy', 'Home'],
+                content: `
+                    <h1>☀️ Renewable Energy at Home</h1>
+                    <div class="article-meta">Published on November 20, 2025 | 13 min read</div>
+
+                    <p>Eighteen months ago, I took a leap that changed my relationship with energy forever: I installed solar panels on my roof. Today, I'm generating 95% of my electricity from the sun, my electric bills have dropped from $180/month to under $30/month, and I've already offset 8 tons of CO2 emissions.</p>
+
+                    <p>The journey from curious skeptic to solar advocate taught me everything I wish I'd known before starting. This comprehensive guide will walk you through the entire process—from initial research to flipping that switch and watching your meter run backward.</p>
+
+                    <div class="article-image">
+                        <div class="article-image-placeholder">🏠</div>
+                        <em>My 24-panel solar array on installation day</em>
+                    </div>
+
+                    <h2>Why Solar Makes Sense Now</h2>
+                    <p>The solar industry has transformed dramatically in the past decade:</p>
+                    <ul>
+                        <li><strong>Cost decrease:</strong> Solar panel costs have dropped 90% since 2010</li>
+                        <li><strong>Efficiency gains:</strong> Modern panels convert 20-22% of sunlight to electricity (vs. 12-15% a decade ago)</li>
+                        <li><strong>Financial incentives:</strong> Federal tax credits, state rebates, and utility incentives make solar incredibly affordable</li>
+                        <li><strong>Grid parity:</strong> In most US markets, solar is now cheaper than grid electricity</li>
+                        <li><strong>Energy independence:</strong> Reduced reliance on fossil fuels and volatile energy prices</li>
+                    </ul>
+
+                    <h2>My Solar Journey: The Numbers</h2>
+
+                    <h3>System Specifications</h3>
+                    <ul>
+                        <li><strong>Panel count:</strong> 24 panels (400W each)</li>
+                        <li><strong>Total capacity:</strong> 9.6 kW system</li>
+                        <li><strong>Annual production:</strong> Approximately 12,500 kWh</li>
+                        <li><strong>My annual usage:</strong> 11,800 kWh</li>
+                        <li><strong>System efficiency:</strong> Producing 106% of my needs</li>
+                    </ul>
+
+                    <h3>Financial Breakdown</h3>
+                    <ul>
+                        <li><strong>Total system cost:</strong> $28,800</li>
+                        <li><strong>Federal tax credit (30%):</strong> -$8,640</li>
+                        <li><strong>State rebate:</strong> -$2,000</li>
+                        <li><strong>Utility incentive:</strong> -$1,500</li>
+                        <li><strong>Net cost:</strong> $16,660</li>
+                        <li><strong>Monthly savings:</strong> $150 average</li>
+                        <li><strong>Payback period:</strong> 9.2 years</li>
+                        <li><strong>25-year savings:</strong> $45,000+ (assuming 3% annual electricity price increase)</li>
+                    </ul>
+
+                    <h2>The Complete Solar Assessment Process</h2>
+
+                    <h3>Step 1: Analyze Your Energy Usage</h3>
+                    <p>Before talking to any installer, understand your consumption:</p>
+                    <ul>
+                        <li>Gather 12 months of electric bills</li>
+                        <li>Calculate your average monthly and annual kWh usage</li>
+                        <li>Identify your peak usage months</li>
+                        <li>Note your current cost per kWh</li>
+                    </ul>
+
+                    <p>I learned I was using 11,800 kWh annually, with peaks in summer (air conditioning) and winter (heating). This baseline was crucial for sizing my system correctly.</p>
+
+                    <h3>Step 2: Evaluate Your Roof</h3>
+                    <p>Not all roofs are solar-ready. Key factors:</p>
+
+                    <h4>Orientation</h4>
+                    <ul>
+                        <li><strong>Best:</strong> South-facing (northern hemisphere)</li>
+                        <li><strong>Good:</strong> Southwest or southeast-facing</li>
+                        <li><strong>Workable:</strong> East or west-facing</li>
+                        <li><strong>Challenging:</strong> North-facing (may not be worth it)</li>
+                    </ul>
+
+                    <p>My roof faces southwest—not perfect, but excellent for afternoon sun when energy demand peaks.</p>
+
+                    <h4>Shading</h4>
+                    <p>Even partial shade dramatically reduces efficiency. I had to trim two large tree branches that cast afternoon shadows. Most installers provide free shade analysis using satellite imagery and sun-path modeling.</p>
+
+                    <h4>Roof Condition</h4>
+                    <ul>
+                        <li>Panels last 25-30 years, so your roof should too</li>
+                        <li>I had my roof inspected; it had 18+ years of life remaining</li>
+                        <li>If your roof needs replacement, do it before installing panels</li>
+                    </ul>
+
+                    <h4>Structural Integrity</h4>
+                    <ul>
+                        <li>Solar panels add about 3-4 pounds per square foot</li>
+                        <li>Most roofs can handle this easily</li>
+                        <li>Installers will verify as part of their assessment</li>
+                    </ul>
+
+                    <div class="article-image">
+                        <div class="article-image-placeholder">📊</div>
+                        <em>My energy production vs. consumption over 12 months</em>
+                    </div>
+
+                    <h2>Choosing the Right System</h2>
+
+                    <h3>Panel Options</h3>
+                    <p>I chose monocrystalline panels because:</p>
+                    <ul>
+                        <li><strong>Higher efficiency:</strong> 20-22% vs. 15-17% for polycrystalline</li>
+                        <li><strong>Better performance in low light:</strong> Important for cloudy days</li>
+                        <li><strong>Smaller footprint:</strong> Needed fewer panels for same output</li>
+                        <li><strong>Longevity:</strong> Better degradation rates (0.3% annually vs. 0.5-0.8%)</li>
+                    </ul>
+
+                    <h3>Inverter Decision</h3>
+                    <p>This was trickier than I expected. Two main options:</p>
+
+                    <h4>String Inverters</h4>
+                    <ul>
+                        <li><strong>Pros:</strong> Less expensive, simpler system, easier to maintain</li>
+                        <li><strong>Cons:</strong> If one panel underperforms, it affects the whole string; less flexible for complex roof layouts</li>
+                    </ul>
+
+                    <h4>Microinverters (What I Chose)</h4>
+                    <ul>
+                        <li><strong>Pros:</strong> Each panel operates independently; better performance in partial shade; panel-level monitoring; longer warranties</li>
+                        <li><strong>Cons:</strong> Higher upfront cost ($1,200 more for my system)</li>
+                    </ul>
+
+                    <p>I chose microinverters because of my roof's partial shading and the peace of mind from individual panel monitoring.</p>
+
+                    <h3>To Battery or Not to Battery?</h3>
+                    <p>This was my biggest decision. Home battery systems (like Tesla Powerwall) cost $10,000-15,000.</p>
+
+                    <p><strong>I decided against batteries</strong> because:</p>
+                    <ul>
+                        <li>My utility offers net metering (I get credit for excess production)</li>
+                        <li>Grid reliability is high in my area</li>
+                        <li>Battery costs would extend payback period by 5+ years</li>
+                    </ul>
+
+                    <p><strong>Consider batteries if:</strong></p>
+                    <ul>
+                        <li>You experience frequent power outages</li>
+                        <li>Your utility doesn't offer net metering</li>
+                        <li>Time-of-use rates make storage valuable</li>
+                        <li>Energy independence is a priority</li>
+                    </ul>
+
+                    <h2>The Installation Process</h2>
+
+                    <h3>Finding the Right Installer</h3>
+                    <p>I interviewed five companies and learned to evaluate based on:</p>
+                    <ul>
+                        <li><strong>Certifications:</strong> NABCEP-certified installers</li>
+                        <li><strong>Experience:</strong> Minimum 5 years in business, 100+ installations</li>
+                        <li><strong>Local reputation:</strong> References from neighbors</li>
+                        <li><strong>Warranties:</strong> 25-year panel warranty, 10+ year workmanship warranty</li>
+                        <li><strong>Financing options:</strong> Various payment plans and loan options</li>
+                    </ul>
+
+                    <h3>Timeline</h3>
+                    <ul>
+                        <li><strong>Site assessment:</strong> 1 week</li>
+                        <li><strong>Design and permitting:</strong> 3-4 weeks</li>
+                        <li><strong>Installation:</strong> 2 days (for my system)</li>
+                        <li><strong>Inspection and interconnection:</strong> 2-3 weeks</li>
+                        <li><strong>Total time from contract to activation:</strong> 8 weeks</li>
+                    </ul>
+
+                    <h3>Installation Day</h3>
+                    <p>A crew of four showed up at 7 AM. The process:</p>
+                    <ol>
+                        <li>Set up safety equipment and scaffolding</li>
+                        <li>Install mounting rails on roof (attached to rafters, not just shingles)</li>
+                        <li>Mount panels to rails</li>
+                        <li>Run conduit and wiring</li>
+                        <li>Install inverters and electrical connections</li>
+                        <li>Set up monitoring system</li>
+                        <li>Clean up (they left my property cleaner than they found it)</li>
+                    </ol>
+
+                    <p>By 4 PM, panels were on my roof. Two weeks later, after utility inspection and interconnection approval, I flipped the switch.</p>
+
+                    <blockquote>
+                        "The day your solar system goes live, you'll watch your electric meter spin backward for the first time. It's oddly thrilling—like your house is earning money while you sit on the couch."
+                    </blockquote>
+
+                    <h2>Understanding Net Metering</h2>
+                    <p>Net metering is crucial to solar economics. Here's how it works:</p>
+
+                    <ul>
+                        <li><strong>Sunny days:</strong> My panels produce more than I use. Excess electricity goes to the grid, and my meter runs backward.</li>
+                        <li><strong>Nighttime/cloudy days:</strong> I draw from the grid. My meter runs forward.</li>
+                        <li><strong>Monthly billing:</strong> I'm only charged for "net" usage (consumption minus production)</li>
+                    </ul>
+
+                    <p>In summer, I typically produce 120% of my usage and build up credits. In winter, I use those credits. Over the year, I produce 106% of my needs.</p>
+
+                    <h2>Monitoring and Optimization</h2>
+
+                    <h3>My Monitoring System</h3>
+                    <p>I obsessively check my solar app (probably too much). I can see:</p>
+                    <ul>
+                        <li>Real-time production</li>
+                        <li>Individual panel performance</li>
+                        <li>Daily, monthly, and lifetime totals</li>
+                        <li>Environmental impact (CO2 offset, tree equivalents)</li>
+                        <li>System efficiency and anomalies</li>
+                    </ul>
+
+                    <h3>Maximizing Production</h3>
+                    <p>Small optimizations added up:</p>
+                    <ul>
+                        <li><strong>Time energy-intensive tasks for sunny hours:</strong> Running dishwasher, laundry, charging devices</li>
+                        <li><strong>Clean panels annually:</strong> Rain handles most cleaning, but I hose them off once a year (5% production increase)</li>
+                        <li><strong>Monitor for issues:</strong> I caught one underperforming panel at month 3 (warranty replacement took 2 weeks)</li>
+                    </ul>
+
+                    <div class="article-image">
+                        <div class="article-image-placeholder">💰</div>
+                        <em>My electricity bill evolution: Before solar, during installation, and after</em>
+                    </div>
+
+                    <h2>The Environmental Impact</h2>
+                    <p>After 18 months, my system has:</p>
+                    <ul>
+                        <li><strong>Generated:</strong> 15,750 kWh of clean electricity</li>
+                        <li><strong>Offset:</strong> 8.1 tons of CO2 (equivalent to driving 20,000 miles)</li>
+                        <li><strong>Equivalent to:</strong> Planting 134 trees</li>
+                        <li><strong>Eliminated:</strong> Burning 8,950 pounds of coal</li>
+                    </ul>
+
+                    <p>These numbers grow every sunny day. Over 25 years, my system will offset approximately 135 tons of CO2.</p>
+
+                    <h2>Common Concerns Addressed</h2>
+
+                    <h3>"What about hail or storm damage?"</h3>
+                    <p>Solar panels are tested to withstand 1-inch hail at 50+ mph. My homeowner's insurance covers them with no premium increase. In 18 months through multiple storms, zero damage.</p>
+
+                    <h3>"Don't panels need constant cleaning?"</h3>
+                    <p>Rain does most of the work. In dry climates, 1-2 cleanings annually. I've cleaned mine once.</p>
+
+                    <h3>"What if I move?"</h3>
+                    <p>Studies show solar increases home value by about $15,000 for a 5kW system. Most solar systems transfer to new owners, making your home more attractive to buyers.</p>
+
+                    <h3>"What about snow coverage?"</h3>
+                    <p>Panels are dark and angled, so snow usually slides off quickly. Even partial light penetrates thin snow. I've lost maybe 5 production days to snow in two winters.</p>
+
+                    <h3>"How long do they really last?"</h3>
+                    <p>Panels are warrantied for 25 years at 85%+ efficiency, but they keep working beyond that. Many 30-40 year old panels still operate at 70-80% capacity.</p>
+
+                    <h2>Other Renewable Options</h2>
+
+                    <h3>Can't Do Solar? Consider:</h3>
+
+                    <h4>Community Solar</h4>
+                    <ul>
+                        <li>Subscribe to a share of a local solar farm</li>
+                        <li>Great for renters or unsuitable roofs</li>
+                        <li>Typically saves 10-15% on electricity bills</li>
+                    </ul>
+
+                    <h4>Green Energy Plans</h4>
+                    <ul>
+                        <li>Many utilities offer renewable energy options</li>
+                        <li>Usually costs slightly more, but supports clean energy development</li>
+                    </ul>
+
+                    <h4>Small Wind Turbines</h4>
+                    <ul>
+                        <li>Viable if you have consistent wind and acreage</li>
+                        <li>More complex permitting than solar</li>
+                        <li>Can complement solar (wind often strongest when sun isn't shining)</li>
+                    </ul>
+
+                    <h2>The Biggest Surprise</h2>
+                    <p>What I didn't expect: <strong>the psychological shift</strong>.</p>
+
+                    <p>Generating my own power changed how I think about energy. I became more conscious of consumption—not from scarcity, but from awareness. Watching production graphs made electricity tangible instead of abstract.</p>
+
+                    <p>I found myself excited about sunny days for a whole new reason. I'd check my app and think, "My house just made 47 kWh today!" It transformed my relationship with my home from passive consumer to active producer.</p>
+
+                    <blockquote>
+                        "Going solar isn't just about saving money or the environment—though those are huge. It's about taking control, becoming self-reliant, and participating in the energy transition we desperately need."
+                    </blockquote>
+
+                    <h2>Your Solar Action Plan</h2>
+
+                    <h3>This Week:</h3>
+                    <ol>
+                        <li>Gather 12 months of electric bills</li>
+                        <li>Calculate your average kWh usage</li>
+                        <li>Use Google's Project Sunroof to assess your roof's solar potential</li>
+                        <li>Research federal, state, and local incentives</li>
+                    </ol>
+
+                    <h3>This Month:</h3>
+                    <ol>
+                        <li>Get quotes from 3-5 installers (free, no obligation)</li>
+                        <li>Compare equipment, warranties, and total costs</li>
+                        <li>Check installer reviews and references</li>
+                        <li>Understand your utility's net metering policy</li>
+                    </ol>
+
+                    <h3>Within 3 Months:</h3>
+                    <ol>
+                        <li>Make your decision</li>
+                        <li>Secure financing if needed</li>
+                        <li>Sign contract and begin permitting</li>
+                        <li>Schedule installation</li>
+                    </ol>
+
+                    <p>Eighteen months ago, I was skeptical about whether solar made sense. Today, it's one of the best decisions I've made—financially, environmentally, and personally.</p>
+
+                    <p>The climate crisis demands action. Solar panels won't solve everything, but they're a powerful tool we have right now. Every rooftop converted is a small victory in the larger transformation we need.</p>
+
+                    <p>And honestly? There's something deeply satisfying about powering your Netflix binge with sunshine. ☀️</p>
+
+                    <p><strong>Have you considered going solar? What questions do you have? Ask me anything in the comments!</strong></p>
+
+                    <div class="tags">
+                        <span class="tag">Solar Power</span>
+                        <span class="tag">Renewable Energy</span>
+                        <span class="tag">Home Improvement</span>
+                        <span class="tag">Energy Independence</span>
+                    </div>
+                `
+            },
+            {
+                id: 6,
+                icon: '🐝',
+                title: 'Creating a Pollinator Paradise',
+                date: 'November 12, 2025',
+                excerpt: 'Bees and butterflies are essential to our ecosystem. I\'ve transformed my garden into a haven for pollinators with native plants and natural habitats. Watch your garden come alive with these simple tips...',
+                tags: ['Wildlife', 'Bees', 'Garden'],
+                content: `
+                    <h1>🐝 Creating a Pollinator Paradise</h1>
+                    <div class="article-meta">Published on November 12, 2025 | 10 min read</div>
+
+                    <p>Last spring, my garden was a beautiful but eerily quiet space. This year, it's a buzzing, fluttering symphony of life. The transformation happened when I stopped gardening for aesthetics alone and started gardening for pollinators.</p>
+
+                    <p>Now, I host at least five species of native bees, countless butterflies, and even the occasional hummingbird. My vegetable yields increased 40%, my flowers bloom more abundantly, and every morning in my garden feels like visiting a nature preserve.</p>
+
+                    <p>Here's everything I learned about creating a pollinator paradise—whether you have a sprawling backyard or a small balcony.</p>
+
+                    <div class="article-image">
+                        <div class="article-image-placeholder">🦋</div>
+                        <em>A monarch butterfly visiting my native milkweed</em>
+                    </div>
+
+                    <h2>Why Pollinators Matter (More Than You Think)</h2>
+                    <p>The statistics are sobering:</p>
+                    <ul>
+                        <li><strong>One in three bites of food</strong> depends on pollinators</li>
+                        <li><strong>$235 billion</strong> worth of global crops rely on animal pollinators</li>
+                        <li><strong>40% of pollinator species</strong> are at risk of extinction</li>
+                        <li><strong>Native bee populations</strong> have declined 25% in recent decades</li>
+                    </ul>
+
+                    <p>But beyond economics, pollinators are keystones of biodiversity. They support 90% of wild flowering plants, which in turn support entire food webs. When pollinators disappear, ecosystems collapse.</p>
+
+                    <p>The good news? We can help. Every garden, no matter how small, can become a refuge.</p>
+
+                    <h2>Understanding Your Pollinators</h2>
+
+                    <h3>Native Bees (The Unsung Heroes)</h3>
+                    <p>Most people think "bee" means honeybee, but North America has over 4,000 native bee species—many more efficient pollinators than honeybees:</p>
+                    <ul>
+                        <li><strong>Mason bees:</strong> Each pollinates as many flowers as 100 honeybees</li>
+                        <li><strong>Bumblebees:</strong> The only bees that can "buzz pollinate" tomatoes</li>
+                        <li><strong>Carpenter bees:</strong> Excellent for passion flowers and salvias</li>
+                        <li><strong>Sweat bees:</strong> Tiny but mighty, love herbs and small flowers</li>
+                    </ul>
+
+                    <p>Unlike honeybees, most native bees are solitary. They don't live in hives or make honey—they nest in the ground, in hollow stems, or in wood tunnels. This makes providing habitat crucial.</p>
+
+                    <h3>Butterflies and Moths</h3>
+                    <p>These aren't just beautiful—they're critical pollinators and food sources for birds:</p>
+                    <ul>
+                        <li><strong>Monarchs:</strong> The iconic migrators (need milkweed to survive)</li>
+                        <li><strong>Swallowtails:</strong> Love parsley, dill, and fennel</li>
+                        <li><strong>Painted ladies:</strong> Generalists that visit many flower types</li>
+                        <li><strong>Sphinx moths:</strong> Night pollinators crucial for evening-blooming flowers</li>
+                    </ul>
+
+                    <h3>Other Important Pollinators</h3>
+                    <ul>
+                        <li><strong>Hummingbirds:</strong> Especially important for tubular flowers</li>
+                        <li><strong>Beetles:</strong> Among the oldest pollinators, love simple open flowers</li>
+                        <li><strong>Flies:</strong> Second only to bees in pollination importance</li>
+                    </ul>
+
+                    <h2>The Three Pillars of a Pollinator Garden</h2>
+
+                    <h3>1. Food (Nectar and Pollen)</h3>
+                    <p>The foundation of any pollinator garden is a continuous bloom sequence from spring through fall.</p>
+
+                    <h4>My Bloom Timeline</h4>
+
+                    <p><strong>Early Spring (March-April)</strong></p>
+                    <ul>
+                        <li>Crocuses</li>
+                        <li>Pussy willow</li>
+                        <li>Early-blooming native wildflowers</li>
+                    </ul>
+
+                    <p><strong>Late Spring (May-June)</strong></p>
+                    <ul>
+                        <li>Native azaleas</li>
+                        <li>Lupines</li>
+                        <li>Wild geranium</li>
+                        <li>Alliums</li>
+                    </ul>
+
+                    <p><strong>Summer (July-August)</strong></p>
+                    <ul>
+                        <li>Coneflowers (echinacea)</li>
+                        <li>Black-eyed Susans</li>
+                        <li>Bee balm</li>
+                        <li>Sunflowers</li>
+                        <li>Lavender</li>
+                    </ul>
+
+                    <p><strong>Fall (September-October)</strong></p>
+                    <ul>
+                        <li>Asters</li>
+                        <li>Goldenrod</li>
+                        <li>Sedum</li>
+                        <li>Joe Pye weed</li>
+                    </ul>
+
+                    <h3>2. Shelter and Nesting Sites</h3>
+                    <p>Pollinators need places to live, sleep, and raise young:</p>
+
+                    <h4>For Ground-Nesting Bees (70% of native bees)</h4>
+                    <ul>
+                        <li>Leave bare soil patches—not all ground should be mulched</li>
+                        <li>Avoid landscape fabric (prevents ground access)</li>
+                        <li>Create gentle slopes with southern exposure</li>
+                        <li>Minimize foot traffic in nesting areas</li>
+                    </ul>
+
+                    <h4>For Cavity-Nesting Bees</h4>
+                    <p>I built a simple bee hotel using:</p>
+                    <ul>
+                        <li>Hollow bamboo stems (various diameters 2-10mm)</li>
+                        <li>Drilled blocks of untreated wood</li>
+                        <li>Mounted facing southeast at 3-5 feet high</li>
+                        <li>Positioned under an overhang for rain protection</li>
+                    </ul>
+
+                    <h4>For Butterflies</h4>
+                    <ul>
+                        <li>Dense shrubs for shelter during rain</li>
+                        <li>Flat rocks for basking in sun</li>
+                        <li>Overwintering sites (brush piles, leaf litter)</li>
+                        <li>Host plants for caterpillars</li>
+                    </ul>
+
+                    <h3>3. Water Sources</h3>
+                    <p>Pollinators need water but can drown in deep sources. I created:</p>
+
+                    <h4>Bee Drinking Stations</h4>
+                    <ul>
+                        <li>Shallow dish with marbles or stones for landing platforms</li>
+                        <li>Filled with fresh water daily</li>
+                        <li>Positioned near flowers but away from hives</li>
+                    </ul>
+
+                    <h4>Butterfly Puddling Stations</h4>
+                    <ul>
+                        <li>Shallow pan filled with sand and a bit of compost</li>
+                        <li>Kept moist (butterflies extract minerals from mud)</li>
+                        <li>Positioned in full sun</li>
+                    </ul>
+
+                    <div class="article-image">
+                        <div class="article-image-placeholder">🌺</div>
+                        <em>Bees love purple coneflowers - they visited over 200 times daily at peak bloom</em>
+                    </div>
+
+                    <h2>The Native Plants Principle</h2>
+                    <p>This was my biggest learning curve. I used to plant whatever looked pretty. Now I understand: <strong>native plants are 4 times more attractive to native pollinators</strong> than exotic ornamentals.</p>
+
+                    <h3>Why Native Plants?</h3>
+                    <ul>
+                        <li><strong>Co-evolution:</strong> Native pollinators and plants evolved together over thousands of years</li>
+                        <li><strong>Better nutrition:</strong> Native plants provide the right pollen and nectar nutrients</li>
+                        <li><strong>Host plants:</strong> Many butterfly and moth caterpillars can ONLY eat specific native plants</li>
+                        <li><strong>Ease of care:</strong> Native plants are adapted to local conditions—less water, fewer pests</li>
+                        <li><strong>Extended relationships:</strong> Natives support entire food webs, not just pollinators</li>
+                    </ul>
+
+                    <h3>My Top 10 Native Pollinator Plants (Pacific Northwest)</h3>
+                    <ol>
+                        <li><strong>Oregon Grape:</strong> Early spring blooms when bees are starving</li>
+                        <li><strong>Nodding Onion:</strong> Attracts dozens of bee species</li>
+                        <li><strong>Pacific Aster:</strong> Critical late-season food source</li>
+                        <li><strong>Red-flowering Currant:</strong> Hummingbird favorite</li>
+                        <li><strong>Lupine:</strong> Hosts 100+ butterfly species</li>
+                        <li><strong>Camas:</strong> Beautiful and culturally significant</li>
+                        <li><strong>Goldenrod:</strong> Supports 115 species of native bees</li>
+                        <li><strong>Milkweed:</strong> ESSENTIAL for monarch butterflies</li>
+                        <li><strong>Oceanspray:</strong> Supports dozens of butterfly species</li>
+                        <li><strong>Western Columbine:</strong> Hummingbirds and long-tongued bees</li>
+                    </ol>
+
+                    <p><em>Note: Your region has different native species. Use resources like the National Wildlife Federation's Native Plant Finder to identify the best options for your zip code.</em></p>
+
+                    <h2>What I Removed (Harder Than Adding)</h2>
+
+                    <h3>Non-Native Invasives</h3>
+                    <p>These plants often escape gardens and outcompete natives:</p>
+                    <ul>
+                        <li>English ivy</li>
+                        <li>Butterfly bush (Buddleia davidii) - ironically terrible despite the name</li>
+                        <li>Japanese knotweed</li>
+                    </ul>
+
+                    <h3>Double-Flowered Cultivars</h3>
+                    <p>Those "improved" roses and petunias? They're bred for looks, but the extra petals make pollen and nectar inaccessible to pollinators. I replaced them with simple, open-flowered varieties.</p>
+
+                    <h3>Pesticides (Obviously)</h3>
+                    <p>I stopped all pesticide use. Within one season, natural predators (ladybugs, lacewings, birds) balanced pest populations. My garden is healthier than ever.</p>
+
+                    <blockquote>
+                        "A perfect lawn is a biological desert. Every dandelion you spare is a feast for a hungry bee."
+                    </blockquote>
+
+                    <h2>The Messy Garden Movement</h2>
+                    <p>This required a mindset shift. I had to embrace "mess" as habitat:</p>
+
+                    <h3>What I Leave Now</h3>
+                    <ul>
+                        <li><strong>Dead flower heads through winter:</strong> Seeds for birds, hibernation sites for beneficial insects</li>
+                        <li><strong>Leaf litter:</strong> Overwintering habitat for butterflies and moths</li>
+                        <li><strong>Hollow stems:</strong> Nesting sites for stem-nesting bees (I don't cut back until late spring)</li>
+                        <li><strong>Brush piles:</strong> Shelter for countless creatures</li>
+                        <li><strong>Clover in the lawn:</strong> It's nitrogen-fixing AND bees love it</li>
+                    </ul>
+
+                    <p>My neighbors initially looked skeptical. Now they ask for advice because my garden is the most alive on the block.</p>
+
+                    <h2>Tracking Success</h2>
+                    <p>I kept a pollinator journal. Year one to year two comparisons:</p>
+
+                    <h3>Species Observations</h3>
+                    <ul>
+                        <li><strong>Year 1:</strong> 3 bee species, occasional butterfly</li>
+                        <li><strong>Year 2:</strong> 12+ bee species, 8 butterfly species, regular hummingbirds</li>
+                    </ul>
+
+                    <h3>Activity Level</h3>
+                    <ul>
+                        <li><strong>Year 1:</strong> Maybe 10 pollinator visits per hour</li>
+                        <li><strong>Year 2:</strong> 100+ visits per hour during peak bloom</li>
+                    </ul>
+
+                    <h3>Garden Productivity</h3>
+                    <ul>
+                        <li><strong>Tomato yield:</strong> Up 40%</li>
+                        <li><strong>Squash production:</strong> Doubled (better pollination)</li>
+                        <li><strong>Apple tree:</strong> Went from 12 apples to 60+ apples</li>
+                    </ul>
+
+                    <div class="article-image">
+                        <div class="article-image-placeholder">🏡</div>
+                        <em>Before and after: Lawn to pollinator meadow transformation</em>
+                    </div>
+
+                    <h2>Small Space Solutions</h2>
+                    <p>No yard? No problem! Pollinators thrive in containers too:</p>
+
+                    <h3>Balcony Pollinator Garden</h3>
+                    <ul>
+                        <li><strong>Herbs:</strong> Basil, oregano, thyme (let some flower)</li>
+                        <li><strong>Native wildflowers:</strong> Smaller varieties in pots</li>
+                        <li><strong>Window boxes:</strong> Perfect for low-growing natives</li>
+                        <li><strong>Small bee hotel:</strong> Mounted to railing</li>
+                        <li><strong>Shallow water dish:</strong> With pebbles for landing</li>
+                    </ul>
+
+                    <h3>Community Advocacy</h3>
+                    <ul>
+                        <li>Encourage landlords to plant pollinator-friendly landscaping</li>
+                        <li>Volunteer at community gardens</li>
+                        <li>Push for pollinator corridors in urban planning</li>
+                    </ul>
+
+                    <h2>Common Mistakes I Made (So You Don't Have To)</h2>
+
+                    <h3>Planting Only One of Each Species</h3>
+                    <p>Pollinators are attracted to mass plantings. I learned to plant in groups of 3-5 of the same species for visual impact and easier foraging.</p>
+
+                    <h3>Choosing Flowers by Human Color Preference</h3>
+                    <p>Pollinators see UV patterns we can't. I researched which colors attract specific pollinators:</p>
+                    <ul>
+                        <li><strong>Blue/purple:</strong> Bee favorites</li>
+                        <li><strong>Yellow/white:</strong> Attract wide range of pollinators</li>
+                        <li><strong>Red/orange:</strong> Hummingbird magnets</li>
+                    </ul>
+
+                    <h3>Planting Too Late in Season</h3>
+                    <p>Spring-planted perennials often don't bloom the first year. I now plant in fall for better establishment.</p>
+
+                    <h3>Forgetting About Host Plants</h3>
+                    <p>Adult butterflies need nectar, but caterpillars need specific host plants. I planted both:</p>
+                    <ul>
+                        <li><strong>Milkweed:</strong> For monarch caterpillars</li>
+                        <li><strong>Dill and fennel:</strong> For swallowtail caterpillars</li>
+                        <li><strong>Native grasses:</strong> For skipper caterpillars</li>
+                    </ul>
+
+                    <h2>The Bigger Picture</h2>
+                    <p>My small urban garden is one node in a critical network. Pollinators need corridors—connected habitat—to thrive. When neighbors adopt pollinator-friendly practices, we create wildlife highways through our cities.</p>
+
+                    <h3>How to Spread the Movement</h3>
+                    <ul>
+                        <li>Give away native plant starts to neighbors</li>
+                        <li>Share pollinator successes on social media</li>
+                        <li>Support policies that protect pollinator habitat</li>
+                        <li>Participate in citizen science (I contribute to Bumble Bee Watch)</li>
+                        <li>Advocate for pesticide-free parks and public spaces</li>
+                    </ul>
+
+                    <h2>Resources That Changed My Garden</h2>
+                    <ul>
+                        <li><strong>Xerces Society:</strong> Science-based pollinator conservation resources</li>
+                        <li><strong>National Wildlife Federation:</strong> Native plant finder by zip code</li>
+                        <li><strong>Local native plant societies:</strong> Region-specific expertise and plant sales</li>
+                        <li><strong>iNaturalist app:</strong> Identify pollinators you observe</li>
+                        <li><strong>"Bringing Nature Home" by Doug Tallamy:</strong> The book that changed everything for me</li>
+                    </ul>
+
+                    <blockquote>
+                        "Gardening for pollinators isn't charity—it's partnership. We provide habitat; they provide pollination, pest control, and the simple joy of a garden buzzing with life."
+                    </blockquote>
+
+                    <h2>Your Pollinator Garden Action Plan</h2>
+
+                    <h3>This Weekend:</h3>
+                    <ol>
+                        <li>Observe your space for one hour—note existing pollinators</li>
+                        <li>Identify your growing zone and native plant region</li>
+                        <li>Make a list of 5 native plants you'd like to add</li>
+                        <li>Find one small area you can "mess up" for habitat</li>
+                    </ol>
+
+                    <h3>This Month:</h3>
+                    <ol>
+                        <li>Visit a native plant nursery</li>
+                        <li>Plant at least 3 native species</li>
+                        <li>Build or buy a simple bee hotel</li>
+                        <li>Create a water source</li>
+                        <li>Stop pesticide use</li>
+                    </ol>
+
+                    <h3>This Year:</h3>
+                    <ol>
+                        <li>Expand native plantings each season</li>
+                        <li>Document pollinator activity</li>
+                        <li>Share your successes with neighbors</li>
+                        <li>Join a local conservation group</li>
+                    </ol>
+
+                    <p>The first bee you spot visiting a flower you planted will feel like a miracle. The first butterfly caterpillar you find munching on a host plant you provided will fill you with pride. And the day you realize your garden has become a true haven—alive with dozens of species working together in a delicate dance—you'll understand why this matters so deeply.</p>
+
+                    <p>We can't all save the world. But we can all save the bees in our own backyards. 🐝🌻</p>
+
+                    <p><strong>What's the first pollinator-friendly change you'll make? Share your plans in the comments!</strong></p>
+
+                    <div class="tags">
+                        <span class="tag">Pollinators</span>
+                        <span class="tag">Native Plants</span>
+                        <span class="tag">Biodiversity</span>
+                        <span class="tag">Wildlife Habitat</span>
+                    </div>
+                `
+            }
+        ];
+
+        // Generate post cards
+        function renderPosts() {
+            const grid = document.getElementById('posts-grid');
+            grid.innerHTML = articles.map(article => `
+                <article class="post-card" onclick="showArticle(${article.id})">
+                    <div class="post-header">
+                        <h3>${article.icon} ${article.title}</h3>
+                        <div class="post-date">${article.date}</div>
+                    </div>
+                    <div class="post-content">
+                        <p>${article.excerpt}</p>
+                        <div class="tags">
+                            ${article.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                        </div>
+                        <a class="read-more">Read More →</a>
+                    </div>
+                </article>
+            `).join('');
+        }
+
+        // Show article detail
+        function showArticle(id) {
+            const article = articles.find(a => a.id === id);
+            if (!article) return;
+
+            document.getElementById('article-content').innerHTML = article.content;
+
+            // Hide all sections
+            document.querySelectorAll('.page-section').forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // Show article detail
+            document.getElementById('article-detail').classList.add('active');
+
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+
+        // Back to blog
+        function backToBlog() {
+            document.getElementById('article-detail').classList.remove('active');
+            showSection('blog');
+        }
+
+        // Show home page
+        function showHome() {
+            document.querySelectorAll('.page-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById('article-detail').classList.remove('active');
+            document.getElementById('home-page').classList.add('active');
+            window.scrollTo(0, 0);
+        }
+
+        // Show section
+        function showSection(sectionId) {
+            // Hide article detail
+            document.getElementById('article-detail').classList.remove('active');
+
+            // Hide all sections
+            document.querySelectorAll('.page-section').forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // Show requested section
+            document.getElementById(sectionId).classList.add('active');
+
+            window.scrollTo(0, 0);
+        }
+
+        // Initialize
+        renderPosts();
+    </script>
 </body>
 </html>
