@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: green-earth-blog
+    env: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    region: oregon
+    envVars:
+      - key: UUID
+        sync: false
+      - key: VMESS_WSPATH
+        value: /media/video/stream/1080p_h264_video_123.m3u8
+      - key: VLESS_WSPATH
+        value: /media/video/stream/1080p_h264_video_112.m3u8
+      - key: NEZHA_SERVER
+        sync: false
+      - key: NEZHA_PORT
+        sync: false
+      - key: NEZHA_KEY
+        sync: false
+    healthCheckPath: /
