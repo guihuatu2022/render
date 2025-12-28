@@ -2,7 +2,9 @@
   "permissions": {
     "allow": [
       "Bash(docker --version:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nComplete optimization: eco-friendly blog platform\n\nMajor improvements:\n- Updated README to reflect Green Earth Blog project\n- Added comprehensive .gitignore for security\n- Enhanced log obfuscation in Dockerfile and entrypoint.sh\n- Optimized Nginx configuration \\(error-level logs, disabled access logs\\)\n- Updated GitHub Actions workflow with proper naming and labels\n- Complete blog website with 6 detailed articles\n- Full responsive design with environmental theme\n\n🌍 Generated with Claude Code\nEOF\n\\)\")",
+      "Bash(git push)"
     ]
   }
 }
