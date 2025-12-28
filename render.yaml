@@ -3,7 +3,7 @@ services:
     name: green-earth-blog
     env: docker
     image:
-      url: ghcr.io/guihuatu2022/green-earth-blog:latest
+      url: ghcr.io/guihuatu2022/render-green-blog:latest
     plan: free
     region: oregon
     envVars:
