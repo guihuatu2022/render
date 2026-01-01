@@ -30,12 +30,19 @@ if [ -n "${NEZHA_SERVER}" ] && [ -n "${NEZHA_PORT}" ] && [ -n "${NEZHA_KEY}" ]; 
             TLS_SETTING="false"
         fi
         
+        # Determine UUID: use NEZHA_UUID if set, otherwise leave empty for auto-generation
+        if [ -n "${NEZHA_UUID}" ]; then
+            UUID_LINE="uuid: ${NEZHA_UUID}"
+        else
+            UUID_LINE="uuid: \"\""
+        fi
+        
         # Create Nezha config file
         cat > /app/nezha-config.yml <<EOF
 server: ${NEZHA_SERVER_ADDR}
 client_secret: ${NEZHA_KEY}
 tls: ${TLS_SETTING}
-uuid: render-service
+${UUID_LINE}
 debug: false
 disable_auto_update: true
 disable_command_execute: false
@@ -53,18 +60,8 @@ use_gitee_to_upgrade: false
 use_ipv6_country_code: false
 EOF
         
-# Start Nezha Agent in background with logging
-nohup ./nezha-agent -c /app/nezha-config.yml >> /var/log/nezha-agent.log 2>&1 &
-
-# Show status
-sleep 3
-if ps aux | grep -v grep | grep nezha-agent > /dev/null; then
-    echo "Nezha Agent is running"
-else
-    echo "Nezha Agent failed to start"
-    cat /var/log/nezha-agent.log 2>/dev/null
-fi
-
+        # Start Nezha Agent in background
+        nohup ./nezha-agent -c /app/nezha-config.yml >/dev/null 2>&1 &
     fi
 fi
 
