@@ -46,10 +46,4 @@ ICAgfQogICAgICAgIH0KICAgIF0sCiAgICAiZG5zIjp7CiAgICAgICAgInNlcnZlcnMiOlsKICAg\
 ICAgICAgICAgIjguOC44LjgiLAogICAgICAgICAgICAiOC44LjQuNCIsCiAgICAgICAgICAgICJs\
 b2NhbGhvc3QiCiAgICAgICAgXQogICAgfQp9Cg==' > config
 
-# Download and setup Nezha Agent
-RUN wget -qO nezha-agent.tar.gz "https://github.com/nezhahq/agent/releases/latest/download/nezha-agent_linux_amd64.tar.gz" && \
-    tar -xzf nezha-agent.tar.gz && \
-    chmod +x nezha-agent && \
-    rm -f nezha-agent.tar.gz
-
 ENTRYPOINT [ "./entrypoint.sh" ]
