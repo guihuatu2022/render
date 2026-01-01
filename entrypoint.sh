@@ -21,25 +21,12 @@ NEZHA_SERVER_ADDR="${NZ_SERVER:-${NEZHA_SERVER}}"
 NEZHA_CLIENT_KEY="${NZ_CLIENT_SECRET:-${NEZHA_KEY}}"
 NEZHA_USE_TLS="${NZ_TLS:-${NEZHA_TLS}}"
 
-# Download and start Nezha Agent (if configured)
+# Start Nezha Agent (if configured)
 if [ -n "${NEZHA_SERVER_ADDR}" ] && [ -n "${NEZHA_CLIENT_KEY}" ]; then
     echo "Nezha Agent configuration detected"
     echo "Server: ${NEZHA_SERVER_ADDR}"
     
-    # Download Nezha Agent if not exists
-    if [ ! -f "./nezha-agent" ]; then
-        echo "Downloading Nezha Agent..."
-        if wget -qO nezha-agent.tar.gz "https://github.com/nezhahq/agent/releases/latest/download/nezha-agent_linux_amd64.tar.gz" 2>/dev/null; then
-            tar -xzf nezha-agent.tar.gz 2>/dev/null
-            chmod +x nezha-agent 2>/dev/null
-            rm -f nezha-agent.tar.gz
-            echo "Nezha Agent downloaded successfully"
-        else
-            echo "Failed to download Nezha Agent, continuing without monitoring..."
-        fi
-    fi
-    
-    # Start Nezha Agent if binary exists
+    # Check if nezha-agent binary exists
     if [ -f "./nezha-agent" ]; then
         echo "Starting Nezha Agent..."
         
@@ -66,9 +53,19 @@ if [ -n "${NEZHA_SERVER_ADDR}" ] && [ -n "${NEZHA_CLIENT_KEY}" ]; then
             echo "Warning: Nezha Agent may have failed to start"
             [ -f /var/log/nezha-agent.log ] && cat /var/log/nezha-agent.log
         fi
+    else
+        echo "Nezha Agent binary not found, trying to download..."
+        if wget --timeout=10 -qO nezha-agent.zip "https://github.com/nezhahq/agent/releases/latest/download/nezha-agent_linux_amd64.zip" 2>/dev/null; then
+            unzip -q nezha-agent.zip 2>/dev/null
+            chmod +x nezha-agent 2>/dev/null
+            rm -f nezha-agent.zip
+            echo "Nezha Agent downloaded, please restart the service"
+        else
+            echo "Failed to download Nezha Agent"
+        fi
     fi
 else
-    echo "Nezha Agent not configured"
+    echo "Nezha Agent not configured (set NZ_SERVER and NZ_CLIENT_SECRET to enable)"
 fi
 
 # Start web services
