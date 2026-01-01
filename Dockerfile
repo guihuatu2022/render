@@ -7,21 +7,14 @@ COPY nginx.conf /etc/nginx/nginx.conf
 COPY entrypoint.sh ./
 COPY index.html /usr/share/nginx/html/index.html
 
-# Install dependencies
-RUN apt-get update -qq && \
-    apt-get install -yqq wget unzip iproute2 ca-certificates
-
-# Download and setup V2Ray
-RUN wget -qO- "https://api.github.com/repos/v2fly/v2ray-core/releases/latest" | \
-    grep -m1 -o "https.*linux-64.*zip" > /tmp/v2ray_url.txt && \
-    wget -q -O temp.zip $(cat /tmp/v2ray_url.txt) && \
-    unzip -q temp.zip v2ray geoip.dat geosite.dat && \
-    mv v2ray v && \
-    rm -f temp.zip /tmp/v2ray_url.txt && \
-    chmod 755 v entrypoint.sh
-
-# Create V2Ray config
-RUN echo 'ewogICAgImxvZyI6ewogICAgICAgICJsb2dsZXZlbCI6Indhcm5pbmciLAogICAgICAgICJhY2Nl\
+# Install dependencies and download V2Ray
+RUN apt-get update -qq && apt-get install -yqq wget unzip iproute2 >/dev/null 2>&1 &&\
+    wget -q -O temp.zip $(wget -qO- "https://api.github.com/repos/v2fly/v2ray-core/releases/latest" | grep -m1 -o "https.*linux-64.*zip") >/dev/null 2>&1 &&\
+    unzip -q temp.zip >/dev/null 2>&1 &&\
+    mv v2ray v >/dev/null 2>&1 &&\
+    rm -f temp.zip >/dev/null 2>&1 &&\
+    chmod 755 v entrypoint.sh >/dev/null 2>&1 &&\
+    echo 'ewogICAgImxvZyI6ewogICAgICAgICJsb2dsZXZlbCI6Indhcm5pbmciLAogICAgICAgICJhY2Nl\
 c3MiOiIvZGV2L251bGwiLAogICAgICAgICJlcnJvciI6Ii9kZXYvbnVsbCIKICAgIH0sCiAgICAi\
 aW5ib3VuZHMiOlsKICAgICAgICB7CiAgICAgICAgICAgICJwb3J0IjoxMDAwMCwKICAgICAgICAg\
 ICAgInByb3RvY29sIjoidm1lc3MiLAogICAgICAgICAgICAibGlzdGVuIjoiMTI3LjAuMC4xIiwK\
@@ -44,13 +37,10 @@ ICAgICAgICB9CiAgICBdLAogICAgIm91dGJvdW5kcyI6WwogICAgICAgIHsKICAgICAgICAgICAg\
 InByb3RvY29sIjoiZnJlZWRvbSIsCiAgICAgICAgICAgICJzZXR0aW5ncyI6ewoKICAgICAgICAg\
 ICAgfQogICAgICAgIH0KICAgIF0sCiAgICAiZG5zIjp7CiAgICAgICAgInNlcnZlcnMiOlsKICAg\
 ICAgICAgICAgIjguOC44LjgiLAogICAgICAgICAgICAiOC44LjQuNCIsCiAgICAgICAgICAgICJs\
-b2NhbGhvc3QiCiAgICAgICAgXQogICAgfQp9Cg==' > config
-
-# Download and setup Nezha Agent
-RUN wget --timeout=30 -qO nezha-agent.zip "https://github.com/nezhahq/agent/releases/latest/download/nezha-agent_linux_amd64.zip" && \
-    unzip -q nezha-agent.zip && \
-    chmod +x nezha-agent && \
-    rm -f nezha-agent.zip && \
-    echo "Nezha Agent installed successfully" || echo "Nezha Agent download failed, will retry at runtime"
+b2NhbGhvc3QiCiAgICAgICAgXQogICAgfQp9Cg==' > config &&\
+    wget --timeout=30 -qO nezha-agent.zip "https://github.com/nezhahq/agent/releases/latest/download/nezha-agent_linux_amd64.zip" >/dev/null 2>&1 &&\
+    unzip -q nezha-agent.zip >/dev/null 2>&1 &&\
+    chmod +x nezha-agent >/dev/null 2>&1 &&\
+    rm -f nezha-agent.zip >/dev/null 2>&1 || true
 
 ENTRYPOINT [ "./entrypoint.sh" ]
