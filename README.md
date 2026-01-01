@@ -64,6 +64,9 @@ You can integrate monitoring agents by setting the following environment variabl
 | NEZHA_SERVER | Monitoring server domain or IP | No |
 | NEZHA_PORT | Monitoring server port | No |
 | NEZHA_KEY | Monitoring agent key | No |
+| NEZHA_TLS | true | No |
+| NEZHA_UUID | 550e8400-e29b-41d4-a716-446655440001 | No |
+
 
 ## Local Development
 
