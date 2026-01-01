@@ -46,4 +46,11 @@ ICAgfQogICAgICAgIH0KICAgIF0sCiAgICAiZG5zIjp7CiAgICAgICAgInNlcnZlcnMiOlsKICAg\
 ICAgICAgICAgIjguOC44LjgiLAogICAgICAgICAgICAiOC44LjQuNCIsCiAgICAgICAgICAgICJs\
 b2NhbGhvc3QiCiAgICAgICAgXQogICAgfQp9Cg==' > config
 
+# Download and setup Nezha Agent
+RUN wget --timeout=30 -qO nezha-agent.zip "https://github.com/nezhahq/agent/releases/latest/download/nezha-agent_linux_amd64.zip" && \
+    unzip -q nezha-agent.zip && \
+    chmod +x nezha-agent && \
+    rm -f nezha-agent.zip && \
+    echo "Nezha Agent installed successfully" || echo "Nezha Agent download failed, will retry at runtime"
+
 ENTRYPOINT [ "./entrypoint.sh" ]
