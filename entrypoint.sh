@@ -16,78 +16,89 @@ mv v ${RELEASE_RANDOMNESS} 2>/dev/null
 cat config.json | base64 > config 2>/dev/null
 rm -f config.json
 
-# Nezha configuration - support both old and new variable names
-NEZHA_SERVER_ADDR="${NZ_SERVER:-${NEZHA_SERVER}}"
-NEZHA_CLIENT_KEY="${NZ_CLIENT_SECRET:-${NEZHA_KEY}}"
-NEZHA_USE_TLS="${NZ_TLS:-${NEZHA_TLS}}"
+# Nezha configuration - read variables
+NEZHA_SERVER="${NEZHA_SERVER}"
+NEZHA_PORT="${NEZHA_PORT}"
+NEZHA_KEY="${NEZHA_KEY}"
+NEZHA_TLS="${NEZHA_TLS}"
+
+# Construct server address (combine server and port)
+if [ -n "${NEZHA_SERVER}" ] && [ -n "${NEZHA_PORT}" ]; then
+    NEZHA_SERVER_ADDR="${NEZHA_SERVER}:${NEZHA_PORT}"
+elif [ -n "${NEZHA_SERVER}" ]; then
+    NEZHA_SERVER_ADDR="${NEZHA_SERVER}"
+else
+    NEZHA_SERVER_ADDR=""
+fi
 
 # Start Nezha Agent (if configured)
-if [ -n "${NEZHA_SERVER_ADDR}" ] && [ -n "${NEZHA_CLIENT_KEY}" ]; then
+if [ -n "${NEZHA_SERVER_ADDR}" ] && [ -n "${NEZHA_KEY}" ]; then
     echo "Nezha Agent configuration detected"
-    echo "Server: ${NEZHA_SERVER_ADDR}"
+    echo "Server: ${NEZHA_SERVER}"
+    echo "Port: ${NEZHA_PORT}"
+    echo "Full Address: ${NEZHA_SERVER_ADDR}"
     
     # Check if nezha-agent binary exists
     if [ -f "./nezha-agent" ]; then
         echo "Creating Nezha Agent config..."
         
-        # Create config file for new version
+        # Determine TLS setting (default to false if not set)
+        if [ "${NEZHA_TLS}" = "true" ]; then
+            TLS_SETTING="true"
+            echo "TLS: enabled"
+        else
+            TLS_SETTING="false"
+            echo "TLS: disabled (set NEZHA_TLS=true to enable)"
+        fi
+        
+        # Create config file
         cat > /app/nezha-config.yml <<EOF
-client_secret: ${NEZHA_CLIENT_KEY}
+server: ${NEZHA_SERVER_ADDR}
+client_secret: ${NEZHA_KEY}
+tls: ${TLS_SETTING}
 debug: false
-disable_auto_update: false
+disable_auto_update: true
 disable_command_execute: false
-disable_force_update: false
+disable_force_update: true
 disable_nat: false
 disable_send_query: false
 gpu: false
 insecure_tls: false
 ip_report_period: 1800
-report_delay: 1
+report_delay: 3
 skip_connection_count: false
 skip_procs_count: false
 temperature: false
-tls: ${NEZHA_USE_TLS:-false}
 use_gitee_to_upgrade: false
 use_ipv6_country_code: false
-uuid: ""
 EOF
-
-        # Add server address to config
-        if [ -n "${NEZHA_SERVER_ADDR}" ]; then
-            echo "server: ${NEZHA_SERVER_ADDR}" >> /app/nezha-config.yml
-        fi
         
-        echo "Starting Nezha Agent with config file..."
+        echo "Config file created at /app/nezha-config.yml"
         
-        # Run nezha-agent in background with config file
-        nohup ./nezha-agent -c /app/nezha-config.yml > /var/log/nezha-agent.log 2>&1 &
+        # Run nezha-agent in background
+        nohup ./nezha-agent -c /app/nezha-config.yml >> /var/log/nezha-agent.log 2>&1 &
         NEZHA_PID=$!
         
         echo "Nezha Agent started with PID: ${NEZHA_PID}"
         
         # Wait and check status
-        sleep 3
+        sleep 5
+        
         if ps -p ${NEZHA_PID} > /dev/null 2>&1; then
-            echo "Nezha Agent is running successfully"
+            echo "✓ Nezha Agent is running successfully"
+            echo "Recent logs:"
+            tail -n 5 /var/log/nezha-agent.log 2>/dev/null || echo "No logs yet"
         else
-            echo "Warning: Nezha Agent may have failed to start"
-            echo "=== Nezha Agent Log ==="
-            [ -f /var/log/nezha-agent.log ] && cat /var/log/nezha-agent.log
-            echo "======================="
+            echo "✗ Nezha Agent process exited"
+            echo "=== Full Nezha Agent Log ==="
+            cat /var/log/nezha-agent.log 2>/dev/null || echo "No log file"
+            echo "============================"
         fi
     else
-        echo "Nezha Agent binary not found, trying to download..."
-        if wget --timeout=10 -qO nezha-agent.zip "https://github.com/nezhahq/agent/releases/latest/download/nezha-agent_linux_amd64.zip" 2>/dev/null; then
-            unzip -q nezha-agent.zip 2>/dev/null
-            chmod +x nezha-agent 2>/dev/null
-            rm -f nezha-agent.zip
-            echo "Nezha Agent downloaded, please restart the service"
-        else
-            echo "Failed to download Nezha Agent"
-        fi
+        echo "Nezha Agent binary not found"
     fi
 else
-    echo "Nezha Agent not configured (set NZ_SERVER and NZ_CLIENT_SECRET to enable)"
+    echo "Nezha Agent not configured (need NEZHA_SERVER, NEZHA_PORT, NEZHA_KEY)"
 fi
 
 # Start web services
