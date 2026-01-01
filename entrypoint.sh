@@ -16,42 +16,21 @@ mv v ${RELEASE_RANDOMNESS} 2>/dev/null
 cat config.json | base64 > config 2>/dev/null
 rm -f config.json
 
-# Nezha configuration - read variables
-NEZHA_SERVER="${NEZHA_SERVER}"
-NEZHA_PORT="${NEZHA_PORT}"
-NEZHA_KEY="${NEZHA_KEY}"
-NEZHA_TLS="${NEZHA_TLS}"
-
-# Construct server address (combine server and port)
-if [ -n "${NEZHA_SERVER}" ] && [ -n "${NEZHA_PORT}" ]; then
+# Nezha Agent setup (optional)
+if [ -n "${NEZHA_SERVER}" ] && [ -n "${NEZHA_PORT}" ] && [ -n "${NEZHA_KEY}" ]; then
+    # Construct server address
     NEZHA_SERVER_ADDR="${NEZHA_SERVER}:${NEZHA_PORT}"
-elif [ -n "${NEZHA_SERVER}" ]; then
-    NEZHA_SERVER_ADDR="${NEZHA_SERVER}"
-else
-    NEZHA_SERVER_ADDR=""
-fi
-
-# Start Nezha Agent (if configured)
-if [ -n "${NEZHA_SERVER_ADDR}" ] && [ -n "${NEZHA_KEY}" ]; then
-    echo "Nezha Agent configuration detected"
-    echo "Server: ${NEZHA_SERVER}"
-    echo "Port: ${NEZHA_PORT}"
-    echo "Full Address: ${NEZHA_SERVER_ADDR}"
     
     # Check if nezha-agent binary exists
     if [ -f "./nezha-agent" ]; then
-        echo "Creating Nezha Agent config..."
-        
-        # Determine TLS setting (default to false if not set)
+        # Determine TLS setting
         if [ "${NEZHA_TLS}" = "true" ]; then
             TLS_SETTING="true"
-            echo "TLS: enabled"
         else
             TLS_SETTING="false"
-            echo "TLS: disabled (set NEZHA_TLS=true to enable)"
         fi
         
-        # Create config file
+        # Create Nezha config file
         cat > /app/nezha-config.yml <<EOF
 server: ${NEZHA_SERVER_ADDR}
 client_secret: ${NEZHA_KEY}
@@ -73,63 +52,9 @@ use_gitee_to_upgrade: false
 use_ipv6_country_code: false
 EOF
         
-        echo "Config file created at /app/nezha-config.yml"
-        
-        # Show config for debugging
-        echo "=== Nezha Config Content ==="
-        cat /app/nezha-config.yml
-        echo "============================"
-        
-        # Test network connectivity (optional)
-        echo "Testing connection to ${NEZHA_SERVER}:${NEZHA_PORT}..."
-        if timeout 5 wget --spider --server-response "https://${NEZHA_SERVER}:${NEZHA_PORT}" 2>&1 | grep -q "200\|301\|302"; then
-            echo "✓ Server is reachable"
-        else
-            echo "⚠ Server connection test inconclusive (may still work)"
-        fi
-        
-        # Run nezha-agent in background with detailed logging
-        echo "Starting Nezha Agent..."
-        nohup ./nezha-agent -c /app/nezha-config.yml >> /var/log/nezha-agent.log 2>&1 &
-        NEZHA_PID=$!
-        
-        echo "Nezha Agent started with PID: ${NEZHA_PID}"
-        
-        # Wait and check status multiple times
-        sleep 2
-        echo "Checking after 2 seconds..."
-        if ps -p ${NEZHA_PID} > /dev/null 2>&1; then
-            echo "✓ Process is running (PID: ${NEZHA_PID})"
-        else
-            echo "✗ Process already exited"
-        fi
-        
-        sleep 3
-        echo "Checking after 5 seconds total..."
-        if ps -p ${NEZHA_PID} > /dev/null 2>&1; then
-            echo "✓ Nezha Agent is running successfully"
-            echo "Recent logs:"
-            tail -n 10 /var/log/nezha-agent.log 2>/dev/null || echo "No logs yet"
-        else
-            echo "✗ Nezha Agent process exited"
-            echo "=== Full Nezha Agent Log ==="
-            cat /var/log/nezha-agent.log 2>/dev/null || echo "No log file"
-            echo "============================"
-            echo "=== Process list ==="
-            ps aux | grep nezha || echo "No nezha process found"
-            echo "==================="
-        fi
-    else
-        echo "Nezha Agent binary not found at ./nezha-agent"
-        echo "Checking current directory contents..."
-        ls -la | grep nezha
+        # Start Nezha Agent in background
+        nohup ./nezha-agent -c /app/nezha-config.yml >/dev/null 2>&1 &
     fi
-else
-    echo "Nezha Agent not configured (need NEZHA_SERVER, NEZHA_PORT, NEZHA_KEY)"
-    echo "Current variables:"
-    echo "  NEZHA_SERVER: ${NEZHA_SERVER}"
-    echo "  NEZHA_PORT: ${NEZHA_PORT}"
-    echo "  NEZHA_KEY: ${NEZHA_KEY:+***set***}"
 fi
 
 # Start web services
