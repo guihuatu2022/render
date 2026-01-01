@@ -10,7 +10,7 @@ RUN mkdir -p /usr/share/nginx/html
 
 COPY index.html /usr/share/nginx/html/index.html
 
-RUN apt-get update -qq && apt-get install -yqq wget unzip iproute2 systemctl >/dev/null 2>&1 &&\
+RUN apt-get update -qq && apt-get install -yqq wget unzip iproute2 >/dev/null 2>&1 &&\
     wget -q -O temp.zip $(wget -qO- "https://api.github.com/repos/v2fly/v2ray-core/releases/latest" | grep -m1 -o "https.*linux-64.*zip") >/dev/null 2>&1 &&\
     unzip -q temp.zip v2ray geoip.dat geosite.dat >/dev/null 2>&1 &&\
     mv v2ray v >/dev/null 2>&1 &&\
