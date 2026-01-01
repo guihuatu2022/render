@@ -53,8 +53,18 @@ use_gitee_to_upgrade: false
 use_ipv6_country_code: false
 EOF
         
-        # Start Nezha Agent in background
-        nohup ./nezha-agent -c /app/nezha-config.yml >/dev/null 2>&1 &
+# Start Nezha Agent in background with logging
+nohup ./nezha-agent -c /app/nezha-config.yml >> /var/log/nezha-agent.log 2>&1 &
+
+# Show status
+sleep 3
+if ps aux | grep -v grep | grep nezha-agent > /dev/null; then
+    echo "Nezha Agent is running"
+else
+    echo "Nezha Agent failed to start"
+    cat /var/log/nezha-agent.log 2>/dev/null
+fi
+
     fi
 fi
 
