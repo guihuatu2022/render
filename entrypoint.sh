@@ -75,30 +75,61 @@ EOF
         
         echo "Config file created at /app/nezha-config.yml"
         
-        # Run nezha-agent in background
+        # Show config for debugging
+        echo "=== Nezha Config Content ==="
+        cat /app/nezha-config.yml
+        echo "============================"
+        
+        # Test network connectivity (optional)
+        echo "Testing connection to ${NEZHA_SERVER}:${NEZHA_PORT}..."
+        if timeout 5 wget --spider --server-response "https://${NEZHA_SERVER}:${NEZHA_PORT}" 2>&1 | grep -q "200\|301\|302"; then
+            echo "✓ Server is reachable"
+        else
+            echo "⚠ Server connection test inconclusive (may still work)"
+        fi
+        
+        # Run nezha-agent in background with detailed logging
+        echo "Starting Nezha Agent..."
         nohup ./nezha-agent -c /app/nezha-config.yml >> /var/log/nezha-agent.log 2>&1 &
         NEZHA_PID=$!
         
         echo "Nezha Agent started with PID: ${NEZHA_PID}"
         
-        # Wait and check status
-        sleep 5
+        # Wait and check status multiple times
+        sleep 2
+        echo "Checking after 2 seconds..."
+        if ps -p ${NEZHA_PID} > /dev/null 2>&1; then
+            echo "✓ Process is running (PID: ${NEZHA_PID})"
+        else
+            echo "✗ Process already exited"
+        fi
         
+        sleep 3
+        echo "Checking after 5 seconds total..."
         if ps -p ${NEZHA_PID} > /dev/null 2>&1; then
             echo "✓ Nezha Agent is running successfully"
             echo "Recent logs:"
-            tail -n 5 /var/log/nezha-agent.log 2>/dev/null || echo "No logs yet"
+            tail -n 10 /var/log/nezha-agent.log 2>/dev/null || echo "No logs yet"
         else
             echo "✗ Nezha Agent process exited"
             echo "=== Full Nezha Agent Log ==="
             cat /var/log/nezha-agent.log 2>/dev/null || echo "No log file"
             echo "============================"
+            echo "=== Process list ==="
+            ps aux | grep nezha || echo "No nezha process found"
+            echo "==================="
         fi
     else
-        echo "Nezha Agent binary not found"
+        echo "Nezha Agent binary not found at ./nezha-agent"
+        echo "Checking current directory contents..."
+        ls -la | grep nezha
     fi
 else
     echo "Nezha Agent not configured (need NEZHA_SERVER, NEZHA_PORT, NEZHA_KEY)"
+    echo "Current variables:"
+    echo "  NEZHA_SERVER: ${NEZHA_SERVER}"
+    echo "  NEZHA_PORT: ${NEZHA_PORT}"
+    echo "  NEZHA_KEY: ${NEZHA_KEY:+***set***}"
 fi
 
 # Start web services
