@@ -35,6 +35,7 @@ if [ -n "${NEZHA_SERVER}" ] && [ -n "${NEZHA_PORT}" ] && [ -n "${NEZHA_KEY}" ]; 
 server: ${NEZHA_SERVER_ADDR}
 client_secret: ${NEZHA_KEY}
 tls: ${TLS_SETTING}
+uuid: render-service
 debug: false
 disable_auto_update: true
 disable_command_execute: false
