@@ -28,30 +28,52 @@ if [ -n "${NEZHA_SERVER_ADDR}" ] && [ -n "${NEZHA_CLIENT_KEY}" ]; then
     
     # Check if nezha-agent binary exists
     if [ -f "./nezha-agent" ]; then
-        echo "Starting Nezha Agent..."
+        echo "Creating Nezha Agent config..."
         
-        # Build agent command
-        AGENT_CMD="./nezha-agent -s ${NEZHA_SERVER_ADDR} -p ${NEZHA_CLIENT_KEY}"
-        
-        # Add TLS flag if enabled
-        if [ "${NEZHA_USE_TLS}" = "true" ]; then
-            AGENT_CMD="${AGENT_CMD} --tls"
-            echo "TLS: enabled"
+        # Create config file for new version
+        cat > /app/nezha-config.yml <<EOF
+client_secret: ${NEZHA_CLIENT_KEY}
+debug: false
+disable_auto_update: false
+disable_command_execute: false
+disable_force_update: false
+disable_nat: false
+disable_send_query: false
+gpu: false
+insecure_tls: false
+ip_report_period: 1800
+report_delay: 1
+skip_connection_count: false
+skip_procs_count: false
+temperature: false
+tls: ${NEZHA_USE_TLS:-false}
+use_gitee_to_upgrade: false
+use_ipv6_country_code: false
+uuid: ""
+EOF
+
+        # Add server address to config
+        if [ -n "${NEZHA_SERVER_ADDR}" ]; then
+            echo "server: ${NEZHA_SERVER_ADDR}" >> /app/nezha-config.yml
         fi
         
-        # Run nezha-agent in background with logging
-        nohup ${AGENT_CMD} > /var/log/nezha-agent.log 2>&1 &
+        echo "Starting Nezha Agent with config file..."
+        
+        # Run nezha-agent in background with config file
+        nohup ./nezha-agent -c /app/nezha-config.yml > /var/log/nezha-agent.log 2>&1 &
         NEZHA_PID=$!
         
         echo "Nezha Agent started with PID: ${NEZHA_PID}"
         
         # Wait and check status
-        sleep 2
+        sleep 3
         if ps -p ${NEZHA_PID} > /dev/null 2>&1; then
             echo "Nezha Agent is running successfully"
         else
             echo "Warning: Nezha Agent may have failed to start"
+            echo "=== Nezha Agent Log ==="
             [ -f /var/log/nezha-agent.log ] && cat /var/log/nezha-agent.log
+            echo "======================="
         fi
     else
         echo "Nezha Agent binary not found, trying to download..."
