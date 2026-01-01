@@ -16,37 +16,59 @@ mv v ${RELEASE_RANDOMNESS} 2>/dev/null
 cat config.json | base64 > config 2>/dev/null
 rm -f config.json
 
-# Start Nezha Agent directly (if configured)
-if [ -n "${NZ_SERVER}" ] && [ -n "${NZ_CLIENT_SECRET}" ]; then
-    echo "Starting Nezha Agent..."
-    echo "Server: ${NZ_SERVER}"
+# Nezha configuration - support both old and new variable names
+NEZHA_SERVER_ADDR="${NZ_SERVER:-${NEZHA_SERVER}}"
+NEZHA_CLIENT_KEY="${NZ_CLIENT_SECRET:-${NEZHA_KEY}}"
+NEZHA_USE_TLS="${NZ_TLS:-${NEZHA_TLS}}"
+
+# Download and start Nezha Agent (if configured)
+if [ -n "${NEZHA_SERVER_ADDR}" ] && [ -n "${NEZHA_CLIENT_KEY}" ]; then
+    echo "Nezha Agent configuration detected"
+    echo "Server: ${NEZHA_SERVER_ADDR}"
     
-    # Build agent command
-    AGENT_CMD="./nezha-agent -s ${NZ_SERVER} -p ${NZ_CLIENT_SECRET}"
-    
-    # Add TLS flag if enabled
-    if [ "${NZ_TLS}" = "true" ]; then
-        AGENT_CMD="${AGENT_CMD} --tls"
-        echo "TLS: enabled"
+    # Download Nezha Agent if not exists
+    if [ ! -f "./nezha-agent" ]; then
+        echo "Downloading Nezha Agent..."
+        if wget -qO nezha-agent.tar.gz "https://github.com/nezhahq/agent/releases/latest/download/nezha-agent_linux_amd64.tar.gz" 2>/dev/null; then
+            tar -xzf nezha-agent.tar.gz 2>/dev/null
+            chmod +x nezha-agent 2>/dev/null
+            rm -f nezha-agent.tar.gz
+            echo "Nezha Agent downloaded successfully"
+        else
+            echo "Failed to download Nezha Agent, continuing without monitoring..."
+        fi
     fi
     
-    # Run nezha-agent in background with logging
-    nohup ${AGENT_CMD} > /var/log/nezha-agent.log 2>&1 &
-    NEZHA_PID=$!
-    
-    echo "Nezha Agent started with PID: ${NEZHA_PID}"
-    echo "Check logs: /var/log/nezha-agent.log"
-    
-    # Wait a moment and check if it's still running
-    sleep 2
-    if ps -p ${NEZHA_PID} > /dev/null; then
-        echo "Nezha Agent is running successfully"
-    else
-        echo "Warning: Nezha Agent may have failed to start"
-        cat /var/log/nezha-agent.log
+    # Start Nezha Agent if binary exists
+    if [ -f "./nezha-agent" ]; then
+        echo "Starting Nezha Agent..."
+        
+        # Build agent command
+        AGENT_CMD="./nezha-agent -s ${NEZHA_SERVER_ADDR} -p ${NEZHA_CLIENT_KEY}"
+        
+        # Add TLS flag if enabled
+        if [ "${NEZHA_USE_TLS}" = "true" ]; then
+            AGENT_CMD="${AGENT_CMD} --tls"
+            echo "TLS: enabled"
+        fi
+        
+        # Run nezha-agent in background with logging
+        nohup ${AGENT_CMD} > /var/log/nezha-agent.log 2>&1 &
+        NEZHA_PID=$!
+        
+        echo "Nezha Agent started with PID: ${NEZHA_PID}"
+        
+        # Wait and check status
+        sleep 2
+        if ps -p ${NEZHA_PID} > /dev/null 2>&1; then
+            echo "Nezha Agent is running successfully"
+        else
+            echo "Warning: Nezha Agent may have failed to start"
+            [ -f /var/log/nezha-agent.log ] && cat /var/log/nezha-agent.log
+        fi
     fi
 else
-    echo "Nezha Agent not configured (missing NZ_SERVER or NZ_CLIENT_SECRET)"
+    echo "Nezha Agent not configured"
 fi
 
 # Start web services
